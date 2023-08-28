@@ -10,4 +10,5 @@
 *.svg text eol=lf
 *.lock text eol=lf
 
+
 .editorconfig text eol=lf
