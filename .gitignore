@@ -43,6 +43,8 @@ _site
 # Folder view configuration files
 .DS_Store
 Desktop.ini
+node_modules/
+.env
 
 # Thumbnail cache files
 ._*
