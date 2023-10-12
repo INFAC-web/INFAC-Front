@@ -1,8 +1,8 @@
 <template>
     <div class="main-form">
         <div >
-            <h1 style="font-family: Font-Title; font-size: 20px; text-align: center">AGREGAR PRODUCTO</h1>
-            <p style="font-family: Font-Normal; text-align: center">id producto ?????</p>  
+            <h1 style="font-family: Gilroy-Bold; font-size: 20px; text-align: center">AGREGAR PRODUCTO</h1>
+            <p style="font-family: Gilroy-Medium; text-align: center">id producto ?????</p>  
             <div class="primeraLinea">
                 <div class="contenedor">
                     <div class="divImagenProducto" style="width: 180px; height: 180px">
@@ -34,7 +34,7 @@
             <div class="divSelecteds">
                 <div>
                     <select style="width: 130px" class="comboBox" name="Proveedor">
-                        <option value="selected">Seleeciona</option>
+                        <option value="">Seleeciona</option>
                         <option value="Uno">Uno</option>
                         <option value="Dos">Dos</option>
                         <option value="Tres">Tres</option>
@@ -152,7 +152,7 @@
 .btnDescart {
   width: 88px;
   height: 37px;
-  font-family: "Font-Title", sans-serif;
+  font-family: Gilroy-Medium;
   font-size: 15px;
   border: none;
   color: white;
@@ -191,7 +191,7 @@
 select {
   border-radius: 10px;
   border: 1px solid #d7d7d7;
-  font-family: Font-Normal;
+  font-family: Gilroy-Medium;
   font-size: 15px;
   height: 42px;
 
@@ -202,7 +202,7 @@ select {
   border: 1px solid #d7d7d7;
   display: inline-block;
   resize: none;
-  font-family: Font-Normal;
+  font-family: Gilroy-Medium;
   font-size: 15px;
   padding-left: 5px;
   padding-right: 5px;
@@ -229,12 +229,12 @@ input {
   border-radius: 10px;
   height: 40px;
   padding-left: 5px;
-  font-family: Font-Normal;
+  font-family: Gilroy-Medium;
   
 }
 
 p {
-  font-family: Font-Title;
+  font-family: Gilroy-Bold;
   font-size: 15px;
   color: #a1a1a1;
   margin-top: 5px;

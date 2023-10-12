@@ -1,0 +1,47 @@
+    
+    .input, .input-special {
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #D7D7D7;
+        font-family: Gilroy-Medium;
+        font-size: 15px;
+        padding: 0px 10px;
+    }
+
+    .select {
+        height: 46px;
+        border-radius: 10px;
+        border: 1px solid #D7D7D7;
+        font-size: 15px;
+        font-family: Gilroy-Medium;
+        padding: 0px 10px;
+    }
+
+    .selec option {
+        background-color: red;
+        color: #333;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .input:focus, .input:hover, .select:hover{
+        outline: none;
+        border-color: #5E20FB;;
+    }
+
+    .input:focus, .select:focus {
+        outline: none;
+        border-color: #5E20FB;;
+        box-shadow: 0 0 5px rgba(129, 140, 248);
+    }
+
+    .input-special::placeholder {
+        color: #94a3b8;
+    }
+    
+    .input-special:focus, .input-special:hover {
+        outline: none;
+        border-color: rgba(129, 140, 248);
+        background-color: #fff;
+        box-shadow: 0 0 0 5px rgb(129 140 248 / 30%);
+    }

@@ -15,7 +15,26 @@ export const getProductsFromApi = async () => {
             }
         });   
 
+      
         return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getProductFromApi = async ( productCode ) => {
+    try {
+        await userStore.refreshToken();
+        
+        const res = await api({
+            url: '/products/' + productCode,
+            method: 'get',
+            headers: {
+                'Authorization': 'Bearer ' + userStore.token.value
+            }
+        });   
+
+        return res.data.product;
     } catch (error) {
         console.log(error);
     }

@@ -15,10 +15,10 @@
             </thead>
             <tbody>
                     <tr v-for="provider in providers" :key="provider.id" class="row">
-                        <td>{{ provider.nit }}</td>
-                        <td>{{ provider.bussines }}</td>
-                        <td>{{ provider.name }}</td>
-                        <td>{{ provider.email }}</td>
+                        <td>{{ provider.nitCompany }}</td>
+                        <td>{{ provider.companyName }}</td>
+                        <td>{{ provider.providerName }}</td>
+                        <td>{{ provider.phoneNumber }}</td>
                         <td class="buttons-opts">
                             <button class="edit-button"> 
                                 <img src="@/assets/images/tables-icons/edit-icon.svg" alt="">
@@ -34,14 +34,28 @@
 </template>
 
 <script setup>
+    import { ref } from "vue"
+    import { getProvidersFromApi } from '@/model/providers.model.js'
+
+    const providers = ref(null)
+
+    const getProviders = async () => {
+        providers.value = await getProvidersFromApi();
+        console.log(providers.value)
+    }
+
+    getProviders();
+
+    /*
     const providers = [
         {
-            nit: 1,
+            nitCompany: '',
             bussines: "Empresa1",
             name: "Pepito pito",
             email: 5000,
         }
     ]
+    */
 </script>
 
 <style scoped>

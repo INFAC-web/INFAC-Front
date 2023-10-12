@@ -24,7 +24,7 @@
 
 <script setup>
     import { ref } from 'vue';
-    import api from '../../../model/axios/axios.js'
+    import api from '../../../model/axios/axios.js';
     import { useUserCounterStore } from '../../../store/userStore.js';
   
     const userStore = useUserCounterStore();

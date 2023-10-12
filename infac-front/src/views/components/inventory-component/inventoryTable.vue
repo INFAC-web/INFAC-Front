@@ -15,57 +15,26 @@
                 <span class="texto-button">Agregar</span>
             </button>
         </div>
-        <table class="table">
-            <thead>
-                <th>Código</th>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Marca</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Acciones</th>
-            </thead>
-            <tbody>
-                <tr v-for="item in items" :key="item.id" class="row">
-                    <td>{{ item.idProduct }}</td>
-                    <td>{{ item.image }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.category }}</td>
-                    <td>{{ item.brand }}</td>
-                    <td>{{ item.retailSale }}</td>
-                    <td>{{ item.stock }}</td>
-
-                    <td class="buttons-opts">
-                        <button class="edit-button"> 
-                            <img :src="`${iconPaths.tablesIcons}/edit-icon.svg`" alt="">
-                        </button>
-                        <button class="disable-button"> 
-                            <img :src="`${iconPaths.tablesIcons}/disable-icon.svg`" alt="">
-                        </button>
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
+        <TableInventory :labels="labels" :items="items" :disable="true" :edit="true" v-if="items"/>
     </div>
 </template>
 
 <script setup>
     import { defineEmits, ref } from 'vue';
     import { config } from '@/config.js';
-
     import { getProductsFromApi } from '@/model/products.model.js'
-    const { iconPaths } = config
 
-    const emits = defineEmits(['updateModal']); // Define el evento personalizado
+    import TableInventory from '../comun-components/tableTemplate.vue';
+    
+    const emits = defineEmits(['updateModal']);
+    const { iconPaths } = config;
 
-    const items = ref(null);
-
+    const labels = ['Codigo', 'Imagen', 'Nombre', 'Categoria', 'Precio', 'Stock', 'Acciones']
+    const items = ref();
+   
     const getProducts = async () => {
         try {
-            const productList = await getProductsFromApi();
-            items.value = productList.products;
+            items.value = await getProductsFromApi();
         } catch (error) {
             console.log(error);
         }
