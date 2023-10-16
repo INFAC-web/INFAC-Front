@@ -134,7 +134,6 @@
     gap: 25px;
 }
 
-
 .btnConfirm {
   width: 88px;
   height: 37px;

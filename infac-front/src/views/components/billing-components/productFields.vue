@@ -2,18 +2,36 @@
     <div id="main-container">
         <form id="client-form" >
                 <div class="content">
-                    <input class="input" type="text" placeholder="Código del producto" v-model="productCode" @keyup.enter="getProduct">
-                    <input class="input" id="product-name" type="text" placeholder="Nombre del producto" v-model="product.name">
-                    <input class="input" type="text" placeholder="U.Medida" v-model="product.measure">
-                    <input class="input" type="text" placeholder="Precio Unitario" v-model="product.retailSale">
-                    <input class="input" type="text" placeholder="Cantidad" v-model="quantity">
-                    <input class="input" type="text" placeholder="IVA" v-model="product.iva">
+                    <div class="inputGroup">
+                        <input id="productCode" type="text" autocomplete="off" class="entry" :class="invalidIDClass" v-model="productCode" @keyup.enter="getProduct" required>
+                        <label for="name" class="label">Código del producto</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry"  v-model="product.name" required>
+                        <label for="name" class="label">Nombre del producto</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry centered" v-model="product.measure" required>
+                        <label for="name" class="label">Medida</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry centered" v-model="product.unityPrice" required>
+                        <label for="name" class="label">Precio</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry centered" v-model="quantity" required>
+                        <label for="name" class="label">Cantidad</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry centered" v-model="product.iva" required>
+                        <label for="name" class="label">IVA</label>
+                    </div>
                     
                     <div id="buttons">
                         <button type="button" class="botonesTop" style="background-color: #0088AA;">
                             <img :src="`${iconPaths.billingIcons}/eye-icon.svg`">
                         </button>
-                        <button type="button" class="botonesTop" style="background-color: #FF6262;">
+                        <button @click="initProduct" type="button" class="botonesTop" style="background-color: #FF6262;">
                             <img :src="`${iconPaths.billingIcons}/garbage-icon.svg`"></button>
                         <button @click="getDataProduct" type="button" class="botonesTop" style="background-color: #378039;">
                             <img :src="`${iconPaths.billingIcons}/plus-icon.svg`" style=" width: 15px; vertical-align: middle;">
@@ -26,13 +44,16 @@
 
 <script setup>
     import { config } from '@/config.js';
+    import { toast } from 'vue3-toastify'
 
     import { getProductFromApi } from '@/model/products.model.js'
     import { defineEmits, ref } from 'vue';
     const { iconPaths } = config;
 
-    const quantity = ref('');
 
+    const emit = defineEmits(['addProduct']);
+
+    //Entity Product
     const productModel = {
         idProduct: '',
         name: '',
@@ -42,30 +63,46 @@
     }
 
     const product = ref(productModel);
+    const productCode = ref(null);
+    const quantity = ref('');
 
-    const nameProduct = ref('');
-    const productCode = ref('');
+    const invalidIDClass = ref('');
 
-    const emit = defineEmits(['addProduct']); // Define el evento personalizado
-
+    //Envía el producto al componente principal de facturación (billingPage)
     const getDataProduct = async () =>{
         await getProduct();
-
         product.value.quantity = parseInt(quantity.value);
-
         emit('addProduct', product.value);
-
-        product.value = productModel;
-        quantity.value = '';
-        productCode.value = '';
+        initProduct();       
     }
 
+    //Obtiene un producto de la base de datos
     const getProduct = async () => {
-        product.value = await getProductFromApi(productCode.value);
+        try {
+            if(productCode.value){
+                invalidIDClass.value = "";
+                product.value = await getProductFromApi(productCode.value);
 
-        if(quantity.value === ''){
-            quantity.value = 1;
+                if(quantity.value === ''){
+                    quantity.value = 1;
+                }
+            } else {
+                throw new Error("Ingresa un código válido");
+            }
+        } catch (error) {
+            invalidIDClass.value = "warningEntry";
+
+            toast.warn(error.message, {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000
+            })
         }
+    }
+
+    const initProduct = () =>{
+        product.value = productModel; //Reiniciar campos (Visual)
+        quantity.value = '';
+        productCode.value = null;
     }
 
 </script>
@@ -96,13 +133,16 @@
         justify-content: center; /* Para centrar el contenido horizontalmente */
     }
 
-
     #client-form .content {
         display: grid;
         grid-template-columns: 20% 30% 8% 10% 9% 5% auto; /* Define los tamaños de las columnas aquí */
         gap: 2%;
         align-items: center;
         width: 80%;
+    }
+
+    .centered {
+        text-align: center;
     }
 
 

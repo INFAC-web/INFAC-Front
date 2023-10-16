@@ -1,11 +1,18 @@
 
 <template>
     <div class="container">
+        <!-- Layout Menu -->
         <div class="nav-container" v-if="userStore.token">
             <NavBar />
         </div>
+
+        <div id="error">
+            
+        </div>
+
+        <!-- Router View para contenido -->
         <div class="content-container">
-            <router-view></router-view> <!-- Contenido de tu página -->
+            <router-view></router-view>
         </div>
   </div>
 </template>
@@ -29,5 +36,6 @@
     body {
         margin: 0;
         background: #F8F7F7;
+        overflow-y: hidden;
     }
 </style>

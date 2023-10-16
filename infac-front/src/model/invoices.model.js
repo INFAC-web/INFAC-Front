@@ -3,19 +3,22 @@ import myUseUserStore from '@/store/myUserStore.js';
 
 const userStore = new myUseUserStore();
 
-export const getClientForInvoice = async (docNumber) => {
+export const generateInvoice = async ( invoiceInfo ) => {
     try {
         await userStore.refreshToken();
+        console.log(invoiceInfo)
         
         const res = await api({
-            url: '/clients/toinvoice/' + docNumber,
-            method: 'get',
+            url: '/invoices/register',
+            method: 'post',
             headers: {
                 'Authorization': 'Bearer ' + userStore.token.value
-            }
+            },
+            data: invoiceInfo
         });   
+
         return res.data;
     } catch (error) {
-        throw error.response;
+        console.log(error);
     }
 }

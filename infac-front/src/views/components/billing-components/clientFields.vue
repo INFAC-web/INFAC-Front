@@ -8,59 +8,92 @@
                         <option value="Unidad2">Unidad2</option>
                     </select>
 
-                    <input class="input" type="text" placeholder="Documento del cliente" v-model="docNumber" @keyup.enter="getClient">
-                    <input class="input" type="text" placeholder="Nombre del cliente" v-model="currentClient.name">
-                    <input class="input" type="text" placeholder="Apellidos del cliente" v-model="currentClient.lastName">
-                    <input class="input" type="text" placeholder="Teléfono de contacto" v-model="currentClient.phoneNumber">
-                    <input class="input" type="text" placeholder="Correo electrónico" v-model="currentClient.email">
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="docNumber" @keyup.enter="getClient" required>
+                        <label for="name" class="label">Documento</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.name" required>
+                        <label for="name" class="label">Nombre</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.lastName" required>
+                        <label for="name" class="label">Apellidos</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.phoneNumber" required>
+                        <label for="name" class="label">Teléfono</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.email" required>
+                        <label for="name" class="label">Correo electrónico</label>
+                    </div>
+    
                 </div>
 
                 <div id="second-line">
-                    <select  class="select" name="Tipo-persona">      
-                        <option value="selected">Tipo de Persona</option>
-                        <option value="Unidad1">Unidad1</option>
+                    <select  class="select" name="Tipo-persona" v-model="currentClient.personType">      
+                        <option value="">Tipo de Persona</option>
+                        <option value="natural">Natural</option>
+                        <option value="juridico">Juridico</option>
+                    </select>
+                    <select  class="select" name="TypeDocument" v-model="address[0]">      
+                        <option value=''>Departamento</option>
+                        <option value="Santander">Santander</option>
                         <option value="Unidad2">Unidad2</option>
                     </select>
-                    <select  class="select" name="TypeDocument">      
-                        <option value="selected">Departamento</option>
-                        <option value="Unidad1">Unidad1</option>
+                    <select  class="select" name="TypeDocument" v-model="address[1]">      
+                        <option value="">Municipio</option>
+                        <option value="Bucaramanga">Bucaramanga</option>
                         <option value="Unidad2">Unidad2</option>
                     </select>
-                    <select  class="select" name="TypeDocument">      
-                        <option value="selected">Municipio</option>
-                        <option value="Unidad1">Unidad1</option>
-                        <option value="Unidad2">Unidad2</option>
-                    </select>
-                    <select  class="select" name="TypeDocument">      
-                        <option value="selected">Barrio</option>
-                        <option value="Unidad1">Unidad1</option>
+                    <select  class="select" name="TypeDocument" v-model="address[2]">      
+                        <option value="">Barrio</option>
+                        <option value="Centro">Centro</option>
                         <option value="Unidad2">Unidad2</option>
                     </select>
                     
-                    <input class="input" type="text" placeholder="Dirección">
-                    <input class="input" type="text" placeholder="Descuento" v-model="currentClient.discountPercent">
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="address[3]" required>
+                        <label for="name" class="label">Dirección</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.discountPercent" required>
+                        <label for="name" class="label">Descuento</label>
+                    </div>
 
                     <select class="select" name="TypeDocument" v-model="currentClient.respIVA">      
                         <option value="">Resp IVA</option>
                         <option value="Si">Si</option>
                         <option value="No">No</option>
                     </select>
-                    <select  class="select" name="TypeDocument">
-                        <option value="selected">Tipo de factura</option>
-                        <option value="Unidad1">Unidad1</option>
-                        <option value="Unidad2">Unidad2</option>
+                    <select  class="select" name="invoiceType" v-model="invoiceType" @blur="setInvoiceType">
+                        <option value="">Tipo de factura</option>
+                        <option value="ELECTRONICA">Factura Electrónica</option>
+                        <option value="POS">Factura tipo P.O.S</option>
+                        <option value="APARTADO">Apartado</option>
+                        <option value="COTIZACION">Cotización</option>
+                        <option value="NOTADEBITO">Nota crédito</option>
+                        <option value="NOTACREDITO">Nota débito</option>
+                        <option value="COMPRA">Compra</option>
                     </select>
                 </div>
             </form>
     </div>
-</template>
+</template> 
 
 <script setup>
     import { getClientForInvoice } from '@/model/clients.model.js';
     import { ref } from 'vue';
+    //import { toast } from 'vue3-toastify'
+    import ErrorHandler from '@/store/errorHandler.js'; // Asegúrate de importar la clase
+
+    const emit = defineEmits(['setClient', 'setInvoiceType']);
 
     const docNumber = ref('');
+    const invoiceType = ref('');
 
+    //---------------------- Entity Client
     const currentClient = ref(
         {
             docType: '',
@@ -69,27 +102,67 @@
             phoneNumber: '',
             email: '',
             discountPercent: '',
-            respIVA: ''
+            personType: '',
+            respIVA: '',
+            address: ''
         }
     );
 
+    const address = ref(',,,'.split(","));
+
+
+    // --------------------------- getters
     const getClient = async () => {
-        currentClient.value = await getClientForInvoice(docNumber.value);
-        console.log(currentClient.value);
+        try {
+            if(!docNumber) throw new Error("Ingrese un documento válido");
+            currentClient.value = await getClientForInvoice(docNumber.value);
+            address.value = currentClient.value.address.split(",");
+            emit('setClient', currentClient.value);
+        } catch (error) {
+            
+
+            this.errorHandler.show(401, error.data.message);
+            /*
+            toast.error(error.data.message, {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000
+            })
+            */
+        }
+        
     }
 
+    // --------------------------- setters
+    const setInvoiceType = () => {
+        emit('setInvoiceType', invoiceType.value)
+        console.log("Tipo set " + invoiceType.value)
+    }
 </script>
 <style scoped>
 
 @import url('../../../assets/styles/global.css');
 
-
-#first-line, #second-line {
+#first-line {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
         gap: 20px;
 }
 
+#second-line {
+    display: grid;
+    grid-template-columns: 12% 12% 9% 7% 20% 7% 7% 15.5%;
+    gap: 20px;
+}
+
+.inputGroup {
+    width: auto;
+   
+}
+
+.entry {
+    width: 100%;
+    box-sizing: border-box;
+}
 #second-line{
     margin-top: 15px;
 }

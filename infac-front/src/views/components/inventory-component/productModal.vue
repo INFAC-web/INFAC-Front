@@ -2,7 +2,6 @@
     <div class="main-form">
         <div >
             <h1 style="font-family: Gilroy-Bold; font-size: 20px; text-align: center">AGREGAR PRODUCTO</h1>
-            <p style="font-family: Gilroy-Medium; text-align: center">id producto ?????</p>  
             <div class="primeraLinea">
                 <div class="contenedor">
                     <div class="divImagenProducto" style="width: 180px; height: 180px">

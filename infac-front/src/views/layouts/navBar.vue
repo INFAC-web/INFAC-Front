@@ -80,7 +80,7 @@
 
     #nav-bar {
         display: inline-block;
-        border-radius: 0px 15px 0px 0px;
+        border-radius: 0px 10px 0px 0px;
         background: #FFF;
         padding: 40px 15px 40px 15px;
         margin-top: 15px;

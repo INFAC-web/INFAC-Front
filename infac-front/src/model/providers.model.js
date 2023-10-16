@@ -6,7 +6,6 @@ const userStore = new myUseUserStore();
 export const getProvidersFromApi = async () => {
     try {
         await userStore.refreshToken();
-        
         const res = await api({
             url: '/providers/',
             method: 'get',

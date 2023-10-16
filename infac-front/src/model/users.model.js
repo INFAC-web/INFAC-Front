@@ -3,12 +3,12 @@ import myUseUserStore from '@/store/myUserStore.js';
 
 const userStore = new myUseUserStore();
 
-export const getProductsFromApi = async () => {
+export const getUser = async (uid) => {
     try {
         await userStore.refreshToken();
         
         const res = await api({
-            url: '/products/',
+            url: '/auth/user/' + uid,
             method: 'get',
             headers: {
                 'Authorization': 'Bearer ' + userStore.token.value

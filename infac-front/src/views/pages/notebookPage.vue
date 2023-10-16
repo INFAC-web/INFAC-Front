@@ -47,7 +47,7 @@
     }
     
     .content {
-        width: 55%;
+        /*width: 55%;*/
         margin-left: 50px;
         background-color: #FFFFFF;
         padding: 30px;

@@ -27,17 +27,17 @@
                     </div>
                 </div>
                 <div id="actions">
-                        <button id="freeze">Congelar (F1)</button>
-                        <button id="facture">Facturar (F3)</button>
+                        <button id="freeze" @click="emit('save')">Congelar (F1)</button>
+                        <button id="facture" @click="emit('facture')">Facturar (F3)</button>
                 </div>
             </div>
 </template>
 
 <script setup>
     import { ref } from "vue";
+    const emit = defineEmits(['save', 'facture']);
 
     const { quant, total } = defineProps(['quant', 'total'])
-
 </script>
 
 <style scoped>
@@ -55,7 +55,7 @@
         left: 50%; 
         transform: translateX(-50%); 
         width: 95%;
-        height: auto; /* La altura se ajustará automáticamente al contenido */
+        height: auto; 
         bottom: -15px;
         border-radius: 15px;
         background: #FFF;

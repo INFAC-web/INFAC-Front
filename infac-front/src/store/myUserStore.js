@@ -44,4 +44,3 @@ class myUseUserStore {
 }
 
 export default myUseUserStore;
-

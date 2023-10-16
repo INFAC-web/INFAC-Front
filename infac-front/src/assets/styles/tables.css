@@ -5,12 +5,11 @@
  }
 
  .inventory-table{
-    width: 70%;
     min-height: calc(100vh - 50px); /* Calcula la altura mínima en función de la altura de la ventana y un margen superior e inferior deseado */
     padding: 35px;
     padding-bottom: 0;
     background-color: #FFFFFF;
-    border-radius: 15px 15px 0px 0px;
+    border-radius: 10px 10px 0px 0px;
     min-height: calc(100vh - 85px); 
 }
 
