@@ -25,11 +25,11 @@
         </div>
         
         <div id="third-line">
-            <div class="inputGroup">
+            <div class="inputGroup money">
                     <input type="text" autocomplete="off" class="entry" required>
                     <label for="name" class="label">Total</label>
             </div>
-            <div class="inputGroup">
+            <div class="inputGroup money">
                     <input type="text" autocomplete="off" class="entry" required>
                     <label for="name" class="label">Recibido</label>
             </div>
@@ -46,6 +46,8 @@
     import { ref } from "vue";
     import { getUser } from '@/model/users.model.js';
     import { generateInvoice } from '@/model/invoices.model.js';
+    import ErrorHandler from '@/store/errorHandler.js'; // Asegúrate de importar la clase
+    const errorHandler = new ErrorHandler();
 
     const props = defineProps(['invoiceInfo']);
 
@@ -58,17 +60,24 @@
     let user = null; 
     
     const getUserPay = async () => {
-        user = await getUser(userID.value);
-        userID.value = parseInt(user.idUser);
-        userName.value = user.name + " " + user.lastName;
+        try {
+            if(!userID.value) throw new Error ('Ingrese un nombre de usuario válido')
+            user = await getUser(userID.value);
+            userID.value = user.nameUser;
+            userName.value = user.name + " " + user.lastName;
+        } catch (error) {
+            errorHandler.show(error)
+        }   
     }
 
     /* Envía la información de la factura al servidor */
     const sendInvoice = async ( invoiceInfo ) => {
-        console.log("eee")
-        console.log(invoiceInfo)
-        const res = await generateInvoice(invoiceInfo);
-        console.log(res);
+        try {
+            if(!optionPay.value) throw new Error ('Seleccione una opción de pago válida')
+            const res = await generateInvoice(invoiceInfo);
+        } catch (error) {
+            errorHandler.show(error);
+        }
     }
 
     /* Retorna la opción de pago actual */
@@ -99,13 +108,15 @@
     }
 
    #payment-modal {
-        width: 30%;
         height: auto;
         padding-top: 35px;
         border-radius: 10px;
         display: grid; 
         gap: 20px;
-        place-items: center;    
+        place-items: center;  
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 20px;
     }
 
     #first-line, #second-line, #third-line {
@@ -135,5 +146,13 @@
     .info-label {
         font-family: Gilroy-Bold;
         font-size: 15px;
+    }
+
+    .money {
+        width: 30%;
+    }
+
+    .money input {
+        text-align: center;
     }
 </style>

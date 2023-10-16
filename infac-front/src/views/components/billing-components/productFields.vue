@@ -44,15 +44,15 @@
 
 <script setup>
     import { config } from '@/config.js';
-    import { toast } from 'vue3-toastify'
+    import ErrorHandler from '@/store/errorHandler.js';
+    const errorHandler = new ErrorHandler();
 
     import { getProductFromApi } from '@/model/products.model.js'
     import { defineEmits, ref } from 'vue';
     const { iconPaths } = config;
 
-
     const emit = defineEmits(['addProduct']);
-
+  
     //Entity Product
     const productModel = {
         idProduct: '',
@@ -70,10 +70,13 @@
 
     //Envía el producto al componente principal de facturación (billingPage)
     const getDataProduct = async () =>{
-        await getProduct();
-        product.value.quantity = parseInt(quantity.value);
-        emit('addProduct', product.value);
-        initProduct();       
+        try {
+            await getProduct();
+            product.value.quantity = parseInt(quantity.value);
+            emit('addProduct', product.value);
+            initProduct(); 
+        } catch (error) {
+        }   
     }
 
     //Obtiene un producto de la base de datos
@@ -87,15 +90,12 @@
                     quantity.value = 1;
                 }
             } else {
-                throw new Error("Ingresa un código válido");
+                throw new Error("Ingrese un código válido");
             }
         } catch (error) {
             invalidIDClass.value = "warningEntry";
-
-            toast.warn(error.message, {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000
-            })
+            errorHandler.show(error)
+            throw error;
         }
     }
 

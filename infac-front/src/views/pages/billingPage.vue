@@ -8,12 +8,17 @@
                 </template>
             </PaymentModal>
         </Transition>
+        <Transition v-bind="freeze" v-if="freeze">
+            <freezeInvoices class="freezeC" @show="showFreeze"/>
+        </Transition>
+        
         <Transition class="fade">   
             <div v-bind="modal" v-if="modal" @click.prevent="modal=false" class="overlay"></div>
         </Transition>
 
         <!-- Otros componentes -->
         <h1 id="title">FACTURACIÓN</h1>
+        <button @click="showFreeze">Congelados</button>
         <div id="content">
             <ClientFields @setClient="setClient" @setInvoiceType="setInvoiceType"/> 
             <ProductFields @addProduct="emitAddProduct"/> 
@@ -39,11 +44,17 @@
     import TableProducts from '../components/comun-components/tableTemplate.vue';
     import TableBody from '../components/billing-components/bodyTable.vue';
 
+    import freezeInvoices from '../components/billing-components/freezeInvoices.vue';
+
+    import ErrorHandler from '@/store/errorHandler.js';
+    const errorHandler = new ErrorHandler();
+
     //Etiquetas de la tabla
     const labels = ['Código', 'Imagen', 'Nombre', 'Unidad', 'Stock', 'Valor Unitario', 'Cantidad', 'Descuento', 'IVA', 'Valor total', 'Acciones'];
 
     //Interacción con estilos
     const modal = ref(false);
+    const freeze = ref(false);
 
     //Interacción con factura --> Variables reactivas
     const itemsQuant = ref(0);
@@ -96,8 +107,10 @@
                     for (let i = 0; i < temporalInvoices.length; i++) {
                         if (temporalInvoices[i].client === client.idClient) {
                             temporalInvoices[i] = {
-                                client: client.idClient,
+                                clientId: client.idClient,
+                                clientDoc:  client.docNumber,
                                 itemsList: currentItems
+                                date:
                             }
                             replace = true;
                             break;
@@ -153,7 +166,19 @@
 
     /* Carga la ventana modal desde componente hijo */
     const loadModal = () => {
-        modal.value = true;
+        try {
+            if(!client) throw new Error('Seleccione un cliente válido')
+            if(itemsList.value.length == 0) throw new Error('Ingrese productos para facturar');
+            if(!invoiceType) throw new Error('Seleccione un tipo de factura válido')
+
+            modal.value = true;
+        } catch (error) {
+            errorHandler.show(error);
+        }
+    }
+
+    const showFreeze = () => {
+        freeze.value = !freeze.value;
     }
 </script>
 
@@ -178,5 +203,4 @@
         font-family: Gilroy-Bold;
         font-size: 25px;
     }
-
 </style>

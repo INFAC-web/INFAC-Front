@@ -19,6 +19,6 @@ export const generateInvoice = async ( invoiceInfo ) => {
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        throw error.response;
     }
 }

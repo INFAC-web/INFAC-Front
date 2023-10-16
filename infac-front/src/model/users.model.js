@@ -17,6 +17,7 @@ export const getUser = async (uid) => {
 
         return res.data;
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
+        throw error.response;
     }
 }

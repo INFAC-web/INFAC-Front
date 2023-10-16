@@ -26,49 +26,69 @@
 <script setup>
     import { config } from '@/config.js';
     import { ref } from 'vue';
+    import ErrorHandler from '@/store/errorHandler.js';
+    const errorHandler = new ErrorHandler();
+
     const { iconPaths } = config;
     const props = defineProps(['items'])
     const emit = defineEmits(['updateItems']);
-
+   
     const items = ref(props.items);
 
     /* Modifica la lista de productos */
     const addProduct = ( product ) =>{
-        const itemInList = items.value.find(item => item.Products_idProduct === product.Products_idProduct);
+        try {
+            if(product.quantity == 0) throw new Error ('Ingrese una cantidad válida')
+            const itemInList = items.value.find(item => item.Products_idProduct === product.Products_idProduct);
 
-        if(itemInList){ 
-            itemInList.quantity += product.quantity;
-            itemInList.totalValue = itemInList.quantity * itemInList.unityPrice;
-        } else {
-            product.totalValue = product.quantity * product.unityPrice;
-            items.value.push( product );
-            emit('updateItems', items.value);
+            if(itemInList){ 
+                itemInList.quantity += product.quantity;
+                itemInList.totalValue = itemInList.quantity * itemInList.unityPrice;
+            } else {
+                product.totalValue = product.quantity * product.unityPrice;
+                items.value.push( product );
+                emit('updateItems', items.value);
+            }
+        } catch (error) {
+            errorHandler.show(error);
         }
     }
 
     /* Modifica el total de productos desde el input de cantidad */
     const modifyItems = ( idProduct, newQuant ) => {
+        try {
+            if( newQuant == 0 ) {
+                deleteItem(idProduct);
+                return;
+            }
 
-        if( newQuant == 0 ) {
-            deleteItem(idProduct);
-            return;
-        } 
+            const itemInList = items.value.find(item => item.Products_idProduct === idProduct);
 
-        const itemInList = items.value.find(item => item.Products_idProduct === idProduct);
-        itemInList.quantity = parseInt(newQuant);
-        itemInList.totalValue = itemInList.quantity * itemInList.unityPrice;
-        emit('updateItems', items.value);
+            if(newQuant > itemInList.stock) {
+                throw new Error('Ingrese una cantidad válida')
+            } 
+            
+            itemInList.quantity = parseInt(newQuant);
+            itemInList.totalValue = itemInList.quantity * itemInList.unityPrice;
+            emit('updateItems', items.value);
+        
+            console.log(items.value);
+
+        } catch (error) {
+            errorHandler.show(error);
+        }
+        
     }
 
     /* Elimina un item de la lista de productos */
     const deleteItem = ( idProduct ) => {
         for (let i = 0; i < items.value.length; i++) {
-                if (items.value[i].idProduct === idProduct) {
-                    items.value.splice(i, 1);
-                    emit('updateItems', items.value);
-                    break;
-                }
+            if (items.value[i].Products_idProduct === idProduct) {
+                items.value.splice(i, 1);
+                emit('updateItems', items.value);
+                break;
             }
+        }
     }
 
     defineExpose({

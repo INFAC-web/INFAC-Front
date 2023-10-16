@@ -85,17 +85,15 @@
 <script setup>
     import { getClientForInvoice } from '@/model/clients.model.js';
     import { ref } from 'vue';
-    //import { toast } from 'vue3-toastify'
-    import ErrorHandler from '@/store/errorHandler.js'; // Asegúrate de importar la clase
+    import ErrorHandler from '@/store/errorHandler.js';
+    const errorHandler = new ErrorHandler();
 
     const emit = defineEmits(['setClient', 'setInvoiceType']);
 
-    const docNumber = ref('');
+    const docNumber = ref(null);
     const invoiceType = ref('');
-
-    //---------------------- Entity Client
-    const currentClient = ref(
-        {
+    
+    const clientEntity = {
             docType: '',
             name : '',
             lastName: '',
@@ -105,37 +103,30 @@
             personType: '',
             respIVA: '',
             address: ''
-        }
-    );
+    }
+    //---------------------- Entity Client
+    const currentClient = ref(clientEntity);
 
     const address = ref(',,,'.split(","));
-
 
     // --------------------------- getters
     const getClient = async () => {
         try {
-            if(!docNumber) throw new Error("Ingrese un documento válido");
+            if(!docNumber.value) throw new Error("Ingrese un documento válido");
+
             currentClient.value = await getClientForInvoice(docNumber.value);
             address.value = currentClient.value.address.split(",");
             emit('setClient', currentClient.value);
         } catch (error) {
-            
-
-            this.errorHandler.show(401, error.data.message);
-            /*
-            toast.error(error.data.message, {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000
-            })
-            */
+            currentClient.value = clientEntity;
+            address.value = ',,,'.split(",");
+            errorHandler.show(error);
         }
-        
     }
 
     // --------------------------- setters
     const setInvoiceType = () => {
         emit('setInvoiceType', invoiceType.value)
-        console.log("Tipo set " + invoiceType.value)
     }
 </script>
 <style scoped>
