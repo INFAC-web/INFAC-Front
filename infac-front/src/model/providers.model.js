@@ -20,3 +20,22 @@ export const getProvidersFromApi = async () => {
     }
 }
 
+export const getProviderFromApi = async (idProvider) => {
+    try {
+        await userStore.refreshToken();
+        
+        const res = await api({
+            url: '/providers/' + idProvider,
+            method: 'get',
+            headers: {
+                'Authorization': 'Bearer ' + userStore.token.value
+            }
+        });   
+
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+

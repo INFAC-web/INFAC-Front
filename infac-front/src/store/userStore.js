@@ -13,6 +13,7 @@ export const useUserCounterStore = defineStore('user', () => {
             const res = await api.get('/auth/refresh');
             token.value = res.data.token;
             expiresIn.value = res.data.expiresIn;
+
         } catch (error) {
             console.log(error)
         }
@@ -33,10 +34,21 @@ export const useUserCounterStore = defineStore('user', () => {
         expiresIn.value = null;
     }
 
+    const tokenInfo = () => {
+        try {
+            const tokenInf = JSON.parse(atob(token.value.split('.')[1]));
+            console.log(tokenInf)
+        } catch (error) {
+            console.log(error);
+        }
+       
+    }
+
     return {
         token,
         expiresIn,
         refreshToken,
-        logOut
+        logOut,
+        tokenInfo
     }
 })

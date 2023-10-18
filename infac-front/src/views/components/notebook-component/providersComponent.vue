@@ -1,35 +1,30 @@
 <template>
     <div class="history-container">
+        <!-- Componentes modal -->
+        <transition name="fade">
+            <div v-if="modal" @click.prevent="showModal(false)" class="overlay"></div>
+        </transition>
+    
+        <Transition v-bind="modal" v-if="modal" class="modal">
+            <ModalTemplate @aceptAction="sendProduct" aceptText="Aceptar">
+                <template v-slot:body>
+                    <ProviderModal :provider="currentProvider"/>
+                </template>
+            </ModalTemplate>
+        </Transition>
+  
         <div class="header">
             <h2 class="subtitle">
                 <span>PROVEEDORES</span>
             </h2>
         </div>
-        <table class="table">
-            <thead>
-                <th>NIT</th> 
-                <th>Empresa</th> 
-                <th>Representante</th>
-                <th>Contacto</th>
-                <th>Acciones</th>
-            </thead>
-            <tbody>
-                    <tr v-for="provider in providers" :key="provider.id" class="row">
-                        <td>{{ provider.nitCompany }}</td>
-                        <td>{{ provider.companyName }}</td>
-                        <td>{{ provider.providerName }}</td>
-                        <td>{{ provider.phoneNumber }}</td>
-                        <td class="buttons-opts">
-                            <button class="edit-button"> 
-                                <img src="@/assets/images/tables-icons/edit-icon.svg" alt="">
-                            </button>
-                            <button class="disable-button"> 
-                                <img src="@/assets/images/tables-icons/disable-icon.svg" alt="">
-                            </button>
-                        </td>
-                    </tr>
-            </tbody>
-        </table>
+        <ViewOptions @showModal="showModal"/>
+        <TableProviders :labels="labels">
+            <template v-slot:body>
+                <BodyTable @setProviders="setProviders" @setCurrentProvider="setCurrentProvider" @showModal="showModal">
+                </BodyTable>
+            </template>
+        </TableProviders>
     </div>
 </template>
 
@@ -37,7 +32,18 @@
     import { ref } from "vue"
     import { getProvidersFromApi } from '@/model/providers.model.js'
 
-    const providers = ref(null)
+    import TableProviders from '../../components/comun-components/tableTemplate.vue';
+    import BodyTable from './providers/bodyTableProv.vue'
+    import ViewOptions from './providers/viewOptions.vue';
+    import ModalTemplate from '../../components/comun-components/modalTemplate.vue'
+    import ProviderModal from './providers/providerModal.vue'
+
+    const modal = ref(false);
+
+    const providers = ref(null);
+    const currentProvider = ref(null);
+
+    const labels = ['NIT', 'Empresa', 'Representante', 'Contacto', 'Acciones'];
 
     const getProviders = async () => {
         providers.value = await getProvidersFromApi();
@@ -46,16 +52,18 @@
 
     getProviders();
 
-    /*
-    const providers = [
-        {
-            nitCompany: '',
-            bussines: "Empresa1",
-            name: "Pepito pito",
-            email: 5000,
-        }
-    ]
-    */
+    const setProviders = (allProviders) => {
+        providers.value = allProviders;
+    }
+
+    const setCurrentProvider = (provider) => {
+        currentProvider.value = provider;
+    }
+
+    const showModal = (value) => {
+        modal.value = value;
+        if(!value) currentProvider.value = '';
+    }
 </script>
 
 <style scoped>

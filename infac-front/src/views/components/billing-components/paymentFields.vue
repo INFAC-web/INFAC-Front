@@ -3,7 +3,7 @@
         <h1 id="title-modal">¿Desea Facturar?</h1>
         <div id="first-line">
             <div class="inputGroup">
-                    <input type="text" autocomplete="off" class="entry" v-model="userID" @blur="getUserPay" required>
+                    <input type="text" autocomplete="off" class="entry" v-model="nickName" @blur="getUserPay" required>
                     <label for="name" class="label">Código del vendedor</label>
             </div>
             <div class="inputGroup">
@@ -46,6 +46,7 @@
     import { ref } from "vue";
     import { getUser } from '@/model/users.model.js';
     import { generateInvoice } from '@/model/invoices.model.js';
+
     import ErrorHandler from '@/store/errorHandler.js'; // Asegúrate de importar la clase
     const errorHandler = new ErrorHandler();
 
@@ -54,16 +55,16 @@
     const invoiceInfo = ref(props.invoiceInfo)
 
     const optionPay = ref('');
-    const userID = ref('');
+    const nickName = ref('');
     const userName = ref('')
 
     let user = null; 
     
     const getUserPay = async () => {
         try {
-            if(!userID.value) throw new Error ('Ingrese un nombre de usuario válido')
-            user = await getUser(userID.value);
-            userID.value = user.nameUser;
+            if(!nickName.value) throw new Error ('Ingrese un nombre de usuario válido')
+            user = await getUser(nickName.value);
+            nickName.value = user.nameUser;
             userName.value = user.name + " " + user.lastName;
         } catch (error) {
             errorHandler.show(error)
@@ -87,7 +88,7 @@
 
     /* Retorna el ID de usuario seleccionado */
     const getUserID = () => {
-        return userID.value;
+        return user.idUser;
     }
 
     /* Define los métodos que serán públicos */

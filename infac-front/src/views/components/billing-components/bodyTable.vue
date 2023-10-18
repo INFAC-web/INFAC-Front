@@ -16,7 +16,7 @@
 
             <td class="buttons-opts">
                 <button @click="deleteItem(item.idProduct)" class="disable-button">
-                    <img :src="`${iconPaths.tablesIcons}/garbage-icon.svg`" alt="">
+                    ELIMINAR
                 </button>
             </td>
         </tr>
@@ -121,4 +121,10 @@
         width: 100%;
     }
 
+    .disable-button{
+        font-family: Gilroy-Bold;
+        font-size: 7px;
+        color: white;
+    }
+    
 </style>

@@ -4,8 +4,8 @@
     padding-left: 10px;     
  }
 
- .inventory-table{
-    min-height: calc(100vh - 50px); /* Calcula la altura mínima en función de la altura de la ventana y un margen superior e inferior deseado */
+.inventory-table {
+    min-height: calc(100vh - 50px); 
     padding: 35px;
     padding-bottom: 0;
     background-color: #FFFFFF;

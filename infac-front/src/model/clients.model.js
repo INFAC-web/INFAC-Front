@@ -19,3 +19,23 @@ export const getClientForInvoice = async (docNumber) => {
         throw error.response;
     }
 }
+
+export const register = async (client) => {
+    try {
+        await userStore.refreshToken();
+
+        console.log(client)
+        
+        const res = await api({
+            url: '/clients/register',
+            method: 'post',
+            headers: {  
+                'Authorization': 'Bearer ' + userStore.token.value
+            },
+            data: client
+        });   
+        return res.data;
+    } catch (error) {
+        throw error.response;
+    }
+}

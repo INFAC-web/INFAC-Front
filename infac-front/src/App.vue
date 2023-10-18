@@ -31,6 +31,7 @@
         padding-top: 50px;
         padding-left: 7%;
         padding-right: 3%;
+        
     }
     
     body {

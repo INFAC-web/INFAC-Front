@@ -5,25 +5,64 @@
         <div v-if="modal" @click.prevent="modal=false" class="overlay"></div>
       </transition>
   
-      <transition name="modal-fade">
-        <div v-if="modal" class="modal">
-          <AddProductForm class="modal"/>
-        </div>
-      </transition>
+      <Transition v-bind="modal" v-if="modal" class="modal">
+          <ModalTemplate @aceptAction="sendProduct" aceptText="Aceptar">
+            <template v-slot:body>
+              <AddProductForm ref="productsFields" />
+            </template>
+          </ModalTemplate>
+      </Transition>
   
       <!-- Componentes para inventario -->
       <h1 class="title">INVENTARIO</h1>
-      <Inventory @updateModal="modal=true" />
+
+      <div class="inventory-table">
+        <ViewOptions @updateModal="modal=true"/>
+      
+        <TableTemplateVue :labels="labels">
+            <template v-slot:body>
+                <InventoryBody @loadProduct="getProduct" :items="items"/>
+            </template>
+        </TableTemplateVue>
+      </div>
     </div>
   </template>
   
 <script setup>
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
 
-  import Inventory from '../components/inventory-component/inventoryTable.vue';
-  import AddProductForm from '../components/inventory-component/productModal copy.vue';
+  import ViewOptions from '../components/inventory-component/viewOptions.vue';
+
+  import AddProductForm from '../components/inventory-component/productModal.vue';
+  import ModalTemplate from '../components/comun-components/modalTemplate.vue';
+
+  import TableTemplateVue from '../components/comun-components/tableTemplate.vue';
+  import InventoryBody from '../components/inventory-component/inventoryBody.vue'
   
   const modal = ref(false);
+  const labels = ['Codigo', 'Imagen','Nombre', 'Categoría', 'Precio', 'Stock', 'Acciones'];
+
+  const items = ref(null);
+  
+  //Componentes
+  const productsFields = ref('')
+
+  const sendProduct = () => {
+    productsFields.value.addProduct()
+  }
+
+
+  const getProduct = (product) => {
+    modal.value = true;
+    setTimeout(() => {
+      productsFields.value.setProduct(product);
+    }, 10)
+  }
+
+  const setItems = (items) => {
+    items.value = items;
+  }
+
 </script>
   
 <style scoped>

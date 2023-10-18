@@ -1,53 +1,32 @@
 <template>
-    <div class="inventory-table">
+    <div >
         <div class="search-container">
-            <input type="text" class="search-input">
+            <div class="inputGroup">
+                <input type="text" autocomplete="off" class="entry" required>
+                <label for="name" class="label">Código</label>
+            </div>
 
-            <select class="select-combo element" id="category" >
-                <option value="">Categoría</option>
-            </select>
-
-            <select class="select-combo element" id="provider" >
-            </select>
-
-            <button @click="emits('updateModal')" class="button-add element">
+            <button @click="emits('showModal', true)" class="button-add element">
                 <img class="img-button" :src="`${iconPaths.tablesIcons}/add-icon.svg`" alt="">
                 <span class="texto-button">Agregar</span>
             </button>
         </div>
-        <TableInventory :labels="labels" :items="items" :disable="true" :edit="true" v-if="items"/>
     </div>
 </template>
 
 <script setup>
-    import { defineEmits, ref } from 'vue';
+    import { ref } from 'vue';
     import { config } from '@/config.js';
-    import { getProductsFromApi } from '@/model/products.model.js'
-
-    import TableInventory from '../comun-components/tableTemplate.vue';
     
-    const emits = defineEmits(['updateModal']);
+    const emits = defineEmits(['showModal']);
     const { iconPaths } = config;
 
-    const labels = ['Codigo', 'Imagen', 'Nombre', 'Categoria', 'Precio', 'Stock', 'Acciones']
-    const items = ref();
-   
-    const getProducts = async () => {
-        try {
-            items.value = await getProductsFromApi();
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    getProducts();
 </script>
 
 <style scoped>
     /* ------------------- SEARCH CONTAINER */
-    @import url('../../../assets/styles/tables.css');
-
     .search-container{ 
+        display: flex;
         height: 42px;
         margin-bottom: 25px;
     }

@@ -14,13 +14,17 @@ class ErrorHandler {
     if(!code) {
       toast.warning(error.message, {
         ...this.options,
-        //data: message,
       });
 
     } else {
       const message = error.data.details;
 
       switch (code) {
+        case 201:
+          toast.success(message,{
+            ...this.options,
+          })
+          break;
         case 404: 
           toast.error(message, {
             ...this.options,
@@ -34,6 +38,10 @@ class ErrorHandler {
         break;
       }
     }
+    
+  }
+
+  update(toast, component){
     
   }
 

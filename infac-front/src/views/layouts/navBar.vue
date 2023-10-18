@@ -8,12 +8,12 @@
                 <div id="nav-bar">
                     <ul id="list-routes">
                         <li>
-                            <router-link to="/inventory">
+                            <router-link to="/inventory" class="link" active-class="active">
                                 <img :src="`${iconPaths.NavBarPath}/stadistics-icon.svg`" alt="">
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/inventory">
+                            <router-link to="/inventory" active-class="active">
                                 <img :src="`${iconPaths.NavBarPath}/inventory-icon.svg`" alt="">
                             </router-link>
                         </li>
@@ -96,8 +96,7 @@
     #nav-bar li {
         list-style: none;
         width: 22px;
-        padding: 0;
-        margin: 0;
+
         margin-bottom: 30px;
     }
 
@@ -110,6 +109,11 @@
         list-style: none;
     }
 
+    .active {
+        background: red;
+        width: 100%;
+        height: 100px;
+    }
     
 
 </style>

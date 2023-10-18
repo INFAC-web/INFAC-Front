@@ -21,7 +21,7 @@
                         <label for="name" class="label">Apellidos</label>
                     </div>
                     <div class="inputGroup">
-                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.phoneNumber" required>
+                        <input type="number" autocomplete="off" class="entry" v-model="currentClient.phoneNumber" required>
                         <label for="name" class="label">Teléfono</label>
                     </div>
                     <div class="inputGroup">
@@ -35,30 +35,30 @@
                     <select  class="select" name="Tipo-persona" v-model="currentClient.personType">      
                         <option value="">Tipo de Persona</option>
                         <option value="natural">Natural</option>
-                        <option value="juridico">Juridico</option>
+                        <option value="juridica">Juridico</option>
                     </select>
-                    <select  class="select" name="TypeDocument" v-model="address[0]">      
+                    <select  class="select" name="TypeDocument" v-model="address.departamento">      
                         <option value=''>Departamento</option>
                         <option value="Santander">Santander</option>
                         <option value="Unidad2">Unidad2</option>
                     </select>
-                    <select  class="select" name="TypeDocument" v-model="address[1]">      
+                    <select  class="select" name="TypeDocument" v-model="address.municipio">      
                         <option value="">Municipio</option>
                         <option value="Bucaramanga">Bucaramanga</option>
                         <option value="Unidad2">Unidad2</option>
                     </select>
-                    <select  class="select" name="TypeDocument" v-model="address[2]">      
+                    <select  class="select" name="TypeDocument" v-model="address.barrio">      
                         <option value="">Barrio</option>
                         <option value="Centro">Centro</option>
                         <option value="Unidad2">Unidad2</option>
                     </select>
                     
                     <div class="inputGroup">
-                        <input type="text" autocomplete="off" class="entry" v-model="address[3]" required>
+                        <input type="text" autocomplete="off" class="entry" v-model="address.direccion" required>
                         <label for="name" class="label">Dirección</label>
                     </div>
                     <div class="inputGroup">
-                        <input type="text" autocomplete="off" class="entry" v-model="currentClient.discountPercent" required>
+                        <input type="number" autocomplete="off" class="entry" v-model="currentClient.discountPercent" required>
                         <label for="name" class="label">Descuento</label>
                     </div>
 
@@ -83,10 +83,13 @@
 </template> 
 
 <script setup>
-    import { getClientForInvoice } from '@/model/clients.model.js';
+    import { getClientForInvoice, register } from '@/model/clients.model.js';
     import { ref } from 'vue';
+    import { toast } from 'vue3-toastify';
     import ErrorHandler from '@/store/errorHandler.js';
     const errorHandler = new ErrorHandler();
+
+    import clientToast from '../client-components/client-toast.vue';
 
     const emit = defineEmits(['setClient', 'setInvoiceType']);
 
@@ -104,30 +107,84 @@
             respIVA: '',
             address: ''
     }
+
+    const addressEntity = {
+        departamento: '',
+        municipio: '',
+        barrio: '',
+        direccion: ''
+    }
+
     //---------------------- Entity Client
     const currentClient = ref(clientEntity);
-
-    const address = ref(',,,'.split(","));
+    const address = ref(addressEntity);
 
     // --------------------------- getters
     const getClient = async () => {
         try {
             if(!docNumber.value) throw new Error("Ingrese un documento válido");
-
             currentClient.value = await getClientForInvoice(docNumber.value);
-            address.value = currentClient.value.address.split(",");
+            defineAddress();
             emit('setClient', currentClient.value);
+
         } catch (error) {
             currentClient.value = clientEntity;
-            address.value = ',,,'.split(",");
+            address.value = addressEntity;
+            
             errorHandler.show(error);
+            
+            setTimeout(( ) =>{
+                if(!currentClient.value.name){
+                
+                toast.info('Se registrará el cliente una vez se realice la factura', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                })
+            }
+            }, 1000)
+            
         }
+    }
+
+    const defineAddress = () => {
+        const temporal = currentClient.value.address.split(',');
+        address.value.departamento = temporal[0];
+        address.value.municipio = temporal[1];
+        address.value.barrio = temporal[2];
+        address.value.direccion = temporal[3]
     }
 
     // --------------------------- setters
     const setInvoiceType = () => {
         emit('setInvoiceType', invoiceType.value)
     }
+
+    const setClient = async (doc) => {
+        docNumber.value = doc;
+        await getClient();
+    }
+
+    const registerClient = async () => {
+        try {
+            currentClient.value.docNumber = docNumber.value;
+            currentClient.value.address = address.value.departamento + ',' + address.value.municipio + ',' + address.value.barrio + ',' + address.value.direccion
+            await register(currentClient.value);
+            
+            await getClient(); //Al finalizar el registro
+            toast.success("Cliente registrado con éxito", {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+            })
+        } catch (error) {
+            errorHandler.show(error)
+        }
+        
+    }
+
+    defineExpose({
+        setClient,
+        registerClient
+    })
 </script>
 <style scoped>
 

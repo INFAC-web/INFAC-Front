@@ -5,37 +5,24 @@
                 <span>HISTÓRICO</span>
             </h2>
         </div>
-        <table class="table">
-            <thead>
-                <th>Imagen</th> 
-                <th>Categoria</th> 
-                <th>Descripcion</th>
-                <th>Monto</th>
-                <th>Fecha</th>
-            </thead>
-            <tbody>
-                <tr v-for="trans in transactions" :key="trans.id" class="row">
-                    <td>{{ trans.img }}</td>
-                    <td>{{ trans.category }}</td>
-                    <td>{{ trans.description }}</td>
-                    <td>{{ trans.amount }}</td>
-                    <td>{{ trans.date }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <TableInvoices :labels="labels">
+            <template v-slot:body>
+                <TableBody>
+
+                </TableBody>
+            </template>
+        </TableInvoices>
+
     </div>
 </template>
 
 <script setup>
-    const transactions = [
-        {
-            id: 1,
-            category: "Cat1",
-            description: "Una descripcion",
-            amount: 5000,
-            date: "04-10-2023"
-        }
-    ]
+
+    import TableInvoices from '../../components/comun-components/tableTemplate.vue';
+    import TableBody from './history/bodyTableHistory.vue'
+
+    const labels = ['', 'Categoría', 'Descripción', 'Monto', 'Fecha', 'Acciones'];
+
 </script>
 
 <style scoped>

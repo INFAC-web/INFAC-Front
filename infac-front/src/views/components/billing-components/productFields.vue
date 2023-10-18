@@ -89,6 +89,7 @@
                 if(quantity.value === ''){
                     quantity.value = 1;
                 }
+
             } else {
                 throw new Error("Ingrese un código válido");
             }
@@ -105,6 +106,9 @@
         productCode.value = null;
     }
 
+    defineExpose({
+        
+    })
 </script>
 <style scoped>
 

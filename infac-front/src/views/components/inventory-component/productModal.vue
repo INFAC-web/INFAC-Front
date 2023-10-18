@@ -1,242 +1,216 @@
 <template>
-    <div class="main-form">
-        <div >
-            <h1 style="font-family: Gilroy-Bold; font-size: 20px; text-align: center">AGREGAR PRODUCTO</h1>
-            <div class="primeraLinea">
-                <div class="contenedor">
-                    <div class="divImagenProducto" style="width: 180px; height: 180px">
-                        <img src="../assets/image/cloud-upload-outline.png" />
-                    </div>
-                    <p style="margin-top: 10px;">Imagen del producto</p>
-                </div>
-
-                <div >
-                    <div>
-                        <div class="idAndNameDiv">
-                            <div>
-                                <input type="text" style="width: 105px; height: 42px" />
-                                <p>Id del producto</p>
+    <div class="modal-inputs">
+        <div class="modal-container">
+            <h2 class="modal-title">AGREGAR PRODUCTO</h2>
+            <div>
+                <div class="first-line">
+                    <button class="img-load">
+                        <img :src="`${iconPaths.modalIcons}/cloud-icon.svg`" alt="">
+                    </button> 
+                    <div class="inputs-first">
+                        <div class="container">
+                            <div class="inputGroup">
+                                <input type="text" :class="{ 'warningEntry': continueNext && !product.productCode}" autocomplete="off" class="entry" v-model="product.productCode" required>
+                                <label for="name" class="label">Id del producto</label>
                             </div>
-                            <div>
-                                <input type="text" style="width: 188px; height: 42px" />
-                                <p>Nombre del producto*</p>
+                            <div class="inputGroup">
+                                <input type="text" autocomplete="off" class="entry"  :class="{ 'warningEntry': continueNext && !product.name}" v-model="product.name" required>
+                                <label for="name" class="label">Nombre del producto</label>
                             </div>
                         </div>
+                        <div>
+                            <div class="inputGroup description">
+                                <input type="text" autocomplete="off" class="entry" v-model="product.description" required>
+                                <label for="name" class="label">Descripción del producto</label>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="second-line">
+                    <select class="select" v-model="product.Providers_idProvider" >
+                        <option value=1>Proveedor</option>
+                    </select>
+                    <select class="select" v-model="product.Categories_idCategory">
+                        <option value=1>Categoria</option>
+                    </select>
+                    <select class="select" id="provider" v-model="product.measure">
+                        <option value='UND'>Unidad</option>
+                    </select>
+                </div>
+                <div class="third-line">
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry"  :class="{ 'warningEntry': continueNext && !product.costPrice}" v-model="product.costPrice" required>
+                        <label for="name" class="label">Costo</label>
                     </div>
-                    <div style="margin-top: -10px;">
-                        <textarea class="textDescription" style="width: 313px; height: 101px"></textarea>
-                        <p>Descripción del producto</p>
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry" :class="{ 'warningEntry': continueNext && !product.retailSale}" v-model="product.retailSale" required>
+                        <label for="name" class="label">Venta al detal</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry" :class="{ 'warningEntry': continueNext && !product.wholeSale}" v-model="product.wholeSale" required>
+                        <label for="name" class="label">Venta al mayor</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry" :class="{ 'warningEntry': continueNext && !product.minStock}" v-model="product.minStock" required>
+                        <label for="name" class="label">Stock Mínimo</label>
                     </div>
                 </div>
+                <div class="fourth-line">
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry"  :class="{ 'warningEntry': continueNext && !product.wholeQuantity}" v-model="product.wholeQuantity" required>
+                        <label for="name" class="label">Cantidad Mayor*</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry" :class="{ 'warningEntry': continueNext && !product.stock}" v-model="product.stock" required>
+                        <label for="name" class="label">Stock actual</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry" :class="{ 'warningEntry': continueNext && !product.iva}" v-model="product.iva" required>
+                        <label for="name" class="label">IVA</label>
+                    </div>
+                    <div class="inputGroup">
+                        <input type="number" autocomplete="off" class="entry" v-model="product.bonus" required>
+                        <label for="name" class="label">Bonificación</label>
+                    </div>
+                </div>
+                
+                
             </div>
-
-            <div class="divSelecteds">
-                <div>
-                    <select style="width: 130px" class="comboBox" name="Proveedor">
-                        <option value="">Seleeciona</option>
-                        <option value="Uno">Uno</option>
-                        <option value="Dos">Dos</option>
-                        <option value="Tres">Tres</option>
-                        <option value="Cuatro">Cuatro</option>
-                    </select>
-                    <p>Proveedor</p>
-                </div>
-
-                <div>
-                    <select style="width: 110px" class="comboBox" name="Marca">
-                        <option value="selected">Seleeciona</option>
-                        <option value="Marca1">Marca1</option>
-                        <option value="Marca2">Marca2</option>
-                        <option value="Marca3">Marca3</option>
-                        <option value="Marca4">Marca4</option>
-                    </select>
-                    <p>Marca</p>
-                </div>
-
-                <div>
-                    <select style="width: 130px" class="comboBox" name="Categoria">
-                        <option value="selected">Seleeciona</option>
-                        <option value="Categoria1">Categoria1</option>
-                        <option value="Categoria2">Categoria2</option>
-
-                    </select>
-                    <p>Categoria</p>
-                </div>
-
-                <div>
-                    <select style="width: 107px" class="comboBox" name="Unidad">
-                        <option value="selected">Selecciona</option>
-                        <option value="Unidad1">Unidad1</option>
-                        <option value="Unidad2">Unidad2</option>
-                    </select>
-                    <p>Unidad</p>
-                </div>
-            </div>
-
-            <div class="terceraLinea">  
-                <div> 
-                    <input type="text" style="width: 112px;">
-                    <p>Costo</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 112px;">
-                    <p>Venta al detal*</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 110px;">
-                    <p>Venta al mayor</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 112px;">
-                    <p>Stock Mínimo</p>
-                </div>
-            </div>
-
-            <div class="cuartaLinea"> 
-                <div> 
-                    <input type="text" style="width: 140px;">
-                    <p>Cantidad Mayorista</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 140px;">
-                    <p>Cantidad Actual</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 62px;">
-                    <p>IVA</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 118px;">
-                    <p>Bonificación</p>
-                </div>
-            </div>
-        
-            <div>  
-                <button class="btnConfirm" style="background-color: #378039;">Registrar</button>
-                <button class="btnDescart" style="background-color: #FF6262;">Descartar </button>
-            </div>
-
         </div>
     </div>
 </template>
 
+<script setup>
+    import { registerProduct } from '@/model/products.model.js'
+
+    import ErrorHandler from '@/store/errorHandler.js';
+    const errorHandler = new ErrorHandler();
+
+    import { config } from '@/config.js';
+    import { onMounted, onUpdated, ref, watch } from 'vue';
+    const { iconPaths } = config;
+
+    const emit = defineEmits(['send'])
+
+    const initProduct = () => {
+        return {
+            Providers_idProvider: 1,
+            Categories_idCategory: 1,
+            productCode: null,
+            name: null,
+            description: null,
+            costPrice: null,
+            retailSale: null,
+            wholeSale: null,
+            minStock: null,
+            wholeQuantity: null,
+            iva: null,
+            bonus: null,
+            measure: 'UND',
+            stock: null,
+            imagesFolderSrc:null
+        }
+    }
+    
+    const product = ref(initProduct());
+    const continueNext = ref(false);
+
+    const addProduct = async () => {
+        try{
+            continueNext.value = !validation(product.value);
+            if(continueNext.value) throw new Error('Compleete los campos')
+            const response = await registerProduct(product.value);
+            product.value = initProduct();
+            errorHandler.show(response);
+        } catch (error) {
+            errorHandler.show(error);  
+        }
+    }
+
+    const setProduct = ( theProduct ) => {
+        product.value = theProduct;
+    }
+
+    const validation = (product) => {
+        const atributosAValidar = [ 'productCode', 'name', 'costPrice', 'retailSale', 'wholeSale',
+            'minStock','wholeQuantity', 'iva', 'measure', 'stock'
+        ];
+
+        for (const atributo of atributosAValidar) {
+            if (product[atributo] === null || product[atributo] === '') {
+                return false;
+            }
+        }
+        return true
+    }
+
+   
+    defineExpose({
+        addProduct,
+        setProduct
+    });
+</script>
+
 <style scoped>
 
-.main-form {
-    padding: 30px;
-    border-radius: 20px;
-}
+    h2 {
+        font-family: Gilroy-Medium;
+        font-size: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-.primeraLinea {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-}
+    .img-load {
+        background: none;
+        border: 2px solid #D7D7D7;
+        border-radius: 10px;
 
+    }
+    .first-line, .second-line, .third-line, .fourth-line{
+        margin-top: 15px;
+        display: grid;
+        gap: 15px;
+    }
 
-.btnConfirm {
-  width: 88px;
-  height: 37px;
-  font-family: "Font-Title", sans-serif;
-  font-size: 15px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-right: 7.5px;
-  
-  
-}
+    .container{
+        display: grid;
+        grid-template-columns: 0.6fr 1fr ;
+        gap: 15px;
+    }
 
-.btnDescart {
-  width: 88px;
-  height: 37px;
-  font-family: Gilroy-Medium;
-  font-size: 15px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-left: 7.5px;
-  
-}
+    .inputs-first{
+        display: grid;
+        grid-template-rows: 1fr 2fr;
+        gap: 15px;
+    }
 
-.idAndNameDiv {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
+    .description {
+        height: 100%;
+       
+    }
 
-.terceraLinea {
-    display: flex;
-    justify-content: center;
-    gap: 17px;
-}
+    .description input {
+        height: 100%;
+    }
 
-.cuartaLinea {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
+    .first-line {
+        grid-template-columns: 0.4fr 1fr ; /* Primera columna tamaño automático, segunda columna se expande */
+    }
 
-.divSelecteds {
-    
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    
-}
+    .second-line{
+        grid-template-columns: 1fr 1fr 1fr ; /* Primera columna tamaño automático, segunda columna se expande */
+    }
+    .third-line {
+        grid-template-columns: 1fr 1fr 1fr 1fr; /* Primera columna tamaño automático, segunda columna se expande */
+    }
 
-select {
-  border-radius: 10px;
-  border: 1px solid #d7d7d7;
-  font-family: Gilroy-Medium;
-  font-size: 15px;
-  height: 42px;
+    .fourth-line {
+        grid-template-columns: 1.2fr 1.25fr 0.5fr 1fr; /* Primera columna tamaño automático, segunda columna se expande */
+    }
 
-}
+    .modal-inputs {
+        width: 550px;
+        padding: 20px;
+    }
 
-.textDescription {
-  border-radius: 10px;
-  border: 1px solid #d7d7d7;
-  display: inline-block;
-  resize: none;
-  font-family: Gilroy-Medium;
-  font-size: 15px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.contenedor {
-  text-align: center;
-}
-.divImagenProducto {
-  border-radius: 10px;
-  border: 1px solid #d7d7d7;
-  display: inline-block;
-  cursor: pointer;
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-
-
-
-}
-
-input {
-  border: 1px solid #d7d7d7;
-  border-radius: 10px;
-  height: 40px;
-  padding-left: 5px;
-  font-family: Gilroy-Medium;
-  
-}
-
-p {
-  font-family: Gilroy-Bold;
-  font-size: 15px;
-  color: #a1a1a1;
-  margin-top: 5px;
-  text-align: left;
-}
 </style>

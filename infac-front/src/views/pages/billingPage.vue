@@ -8,8 +8,9 @@
                 </template>
             </PaymentModal>
         </Transition>
+
         <Transition v-bind="freeze" v-if="freeze">
-            <freezeInvoices class="freezeC" @show="showFreeze"/>
+            <freezeInvoices class="freezeC" @show="showFreeze" @send="loadFreezeInvoice"/>
         </Transition>
         
         <Transition class="fade">   
@@ -17,11 +18,18 @@
         </Transition>
 
         <!-- Otros componentes -->
-        <h1 id="title">FACTURACIÓN</h1>
-        <button @click="showFreeze">Congelados</button>
+        <div style="display: none;">
+            <invoiceComponent ref="invoiceGenerator"/>
+        </div>
+        
+        <div class="header"> 
+            <h1 id="title">FACTURACIÓN</h1>
+            <button @click="showFreeze" class="buttonFreeze">Congelados</button>
+        </div>
+    
         <div id="content">
-            <ClientFields @setClient="setClient" @setInvoiceType="setInvoiceType"/> 
-            <ProductFields @addProduct="emitAddProduct"/> 
+            <ClientFields ref="clientComponent" @setClient="setClient" @setInvoiceType="setInvoiceType"/> 
+            <ProductFields ref="productComponent" @addProduct="emitAddProduct"/> 
             <TableProducts :quant="itemsQuant" :labels="labels" id="billing-table">
                 <template v-slot:body>
                     <TableBody ref="tableComp" @updateItems="setItems" :items="itemsList" :garbage="true"/>
@@ -33,7 +41,8 @@
 </template>
 
 <script setup>
-    import { ref, watch } from 'vue';
+    import { ref, watch, onMounted } from 'vue';
+
     import ClientFields from '../components/billing-components/clientFields.vue';
     import ProductFields from '../components/billing-components/productFields.vue';
     import DetailFields from '../components/billing-components/detailsFields.vue';
@@ -45,6 +54,10 @@
     import TableBody from '../components/billing-components/bodyTable.vue';
 
     import freezeInvoices from '../components/billing-components/freezeInvoices.vue';
+
+    import { getProductFromApi } from '@/model/products.model.js';
+
+    import invoiceComponent from '../components/billing-formats/posInvoice.vue';
 
     import ErrorHandler from '@/store/errorHandler.js';
     const errorHandler = new ErrorHandler();
@@ -69,6 +82,10 @@
     //Componentes
     const payFieldsComp = ref(null);
     const tableComp = ref(null);
+    const clientComponent = ref(null);
+    const productComponent = ref(null);
+
+    const invoiceGenerator = ref(null);
     
     /* Observa cambios en la lista para actualizar los datos relacionados */
     watch(itemsList.value, (newItems) => {
@@ -96,7 +113,7 @@
 
                 itemsList.value.forEach((item) => { //Añade la lista de productos
                     currentItems.push({
-                        Products_idProduct: item.idProduct,
+                        product: item.productCode,
                         quantity: item.quantity
                     })
                 });
@@ -105,12 +122,12 @@
                     temporalInvoices = []
                 } else {
                     for (let i = 0; i < temporalInvoices.length; i++) {
-                        if (temporalInvoices[i].client === client.idClient) {
+                        if (temporalInvoices[i].clientId === client.idClient) {
                             temporalInvoices[i] = {
                                 clientId: client.idClient,
                                 clientDoc:  client.docNumber,
-                                itemsList: currentItems
-                                date:
+                                itemsList: currentItems,
+                                date: new Date()
                             }
                             replace = true;
                             break;
@@ -120,8 +137,10 @@
 
                 if(!replace){
                     temporalInvoices.push({
-                        client: client.idClient,
-                        itemsList: currentItems
+                        clientId: client.idClient,
+                        clientDoc:  client.docNumber,
+                        itemsList: currentItems,
+                        date: new Date()
                     });
                 }
                 
@@ -132,20 +151,44 @@
         }
     };
 
+    const loadFreezeInvoice = async (docNumber, items) =>{
+        clientComponent.value.setClient(docNumber);
+
+        console.log(items);
+
+        items.forEach(async (item) => {
+            console.log(item);
+            let product = await getProductFromApi(item.product);
+            product.quantity = item.quantity;
+            emitAddProduct(product)
+        })
+    }
+
     /* Define las etiquetas para el body de la solicitud */
     const factureAcept = async () => {
-        const invoiceInfo = {
-            Clients_idClient: client.idClient,
-            invoiceType: invoiceType,
-            dicount: dicount.value,
-            total:  totalValue.value,
-            itemsQuant: itemsQuant.value,
-            productList : itemsList.value,
-            Users_idUser: payFieldsComp.value.getUserID(),
-            typePay: payFieldsComp.value.getOptionPay()
+        try {
+            const invoiceInfo = {
+                Clients_idClient: client.idClient,
+                invoiceType: invoiceType,
+                dicount: dicount.value,
+                total:  totalValue.value,
+                itemsQuant: itemsQuant.value,
+                productList : itemsList.value,
+                Users_idUser: payFieldsComp.value.getUserID(),
+                typePay: payFieldsComp.value.getOptionPay()
+            }
+            await payFieldsComp.value.sendInvoice(invoiceInfo);
+
+            if(invoiceGenerator.value){
+                console.log(invoiceGenerator.value)
+                invoiceGenerator.value.generatePDF(invoiceInfo);
+            }
+
+        } catch (error) {
+            console.log(error);
         }
-        await payFieldsComp.value.sendInvoice(invoiceInfo);
-    }
+        
+    } 
 
     //---------------------------------------- setters
     /* Define el id del cliente al cual se asociará la factura */
@@ -165,9 +208,11 @@
     }
 
     /* Carga la ventana modal desde componente hijo */
-    const loadModal = () => {
+    const loadModal = async () => {
         try {
-            if(!client) throw new Error('Seleccione un cliente válido')
+            if(!client) {
+                await clientComponent.value.registerClient();
+            }
             if(itemsList.value.length == 0) throw new Error('Ingrese productos para facturar');
             if(!invoiceType) throw new Error('Seleccione un tipo de factura válido')
 
@@ -202,5 +247,20 @@
     #title {
         font-family: Gilroy-Bold;
         font-size: 25px;
+       
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 20px;
+    }
+
+
+    .buttonFreeze {
+        height: 30px;
+        width: auto;
+        margin: auto 0;
+        border-radius: 5px;
     }
 </style>
