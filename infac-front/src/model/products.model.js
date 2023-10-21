@@ -62,7 +62,6 @@ export const getProductFromApi = async ( productCode ) => {
 /* Obtiene un producto por código de producto */
 export const getFullProduct = async ( productId ) => {
     try {
-        console.log("productID" + productId)
         await userStore.refreshToken();
         const res = await api({
             url: '/products/' + productId,
@@ -71,7 +70,6 @@ export const getFullProduct = async ( productId ) => {
                 'Authorization': 'Bearer ' + userStore.token.value
             }
         });   
-        
         return res.data;
     } catch (error) {
         throw error.response;

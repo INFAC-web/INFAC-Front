@@ -8,12 +8,12 @@
                 <div id="nav-bar">
                     <ul id="list-routes">
                         <li>
-                            <router-link to="/inventory" class="link" active-class="active">
+                            <router-link to="/inventory" class="link">
                                 <img :src="`${iconPaths.NavBarPath}/stadistics-icon.svg`" alt="">
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/inventory" active-class="active">
+                            <router-link to="/inventory">
                                 <img :src="`${iconPaths.NavBarPath}/inventory-icon.svg`" alt="">
                             </router-link>
                         </li>
@@ -40,9 +40,9 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link to="/inventory">
+                            <button class="button">
                                 <img :src="`${iconPaths.NavBarPath}/perfil-icon.svg`" alt="">
-                            </router-link>
+                            </button>
                         </li>
                         <li>
                             <router-link to="/inventory">
@@ -115,5 +115,12 @@
         height: 100px;
     }
     
+    .button {
+        background: none;
+        border: none;
+        outline: none;
+        padding: 0;
+        cursor: pointer;
+    }
 
 </style>

@@ -2,8 +2,9 @@ import html2pdf from 'html2pdf.js'
 import posInvoice from '../views/components/billing-formats/posInvoice.vue'
 
 class PDFgenerator {
-    constructor (invoiceInfo) {
-        this.info = invoiceInfo;
+    constructor (invoiceInfo, products) {
+        this.infoInvoice = invoiceInfo;
+        this.products = products; 
     }
 
     POS () {

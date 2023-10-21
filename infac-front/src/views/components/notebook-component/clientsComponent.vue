@@ -5,43 +5,19 @@
                 <span>CLIENTES</span>
             </h2>
         </div>
-        <table class="table">
-            <thead>
-                <th>Documento</th> 
-                <th>Nombre</th> 
-                <th>Apellidos</th>
-                <th>Contacto</th>
-                <th>Acciones</th>
-            </thead>
-            <tbody>
-                    <tr v-for="provider in providers" :key="provider.id" class="row">
-                        <td>{{ provider.nit }}</td>
-                        <td>{{ provider.bussines }}</td>
-                        <td>{{ provider.name }}</td>
-                        <td>{{ provider.email }}</td>
-                        <td class="buttons-opts">
-                            <button class="edit-button"> 
-                                <img src="@/assets/icons/tables-icons/edit-icon.svg" alt="">
-                            </button>
-                            <button class="disable-button"> 
-                                <img src="@/assets/icons/tables-icons/disable-icon.svg" alt="">
-                            </button>
-                        </td>
-                    </tr>
-            </tbody>
-        </table>
+        <TableClients :labels="labels">
+            <template v-slot:body>
+                <BodyClients></BodyClients>
+            </template>
+        </TableClients>
     </div>
 </template>
 
 <script setup>
-    const providers = [
-        {
-            nit: 1,
-            bussines: "Empresa1",
-            name: "Pepito pito",
-            email: 5000,
-        }
-    ]
+    import TableClients from '../../components/comun-components/tableTemplate.vue';
+    import BodyClients from './clients/bodyClients.vue'
+
+    const labels = ['Documento', 'Nombre', 'Apellidos', 'Contacto', 'Acciones'];
 </script>
 
 <style scoped>

@@ -55,3 +55,9 @@
     getProducs();
 
 </script>
+
+<style scoped>
+    tr {
+        height: 70px;
+    }
+</style>

@@ -45,6 +45,10 @@
         font-family: Gilroy-Bold;
         margin-bottom: 30px;
     }
+
+    .content {
+        width: 50%;
+    }
     
     .content {
         /*width: 55%;*/

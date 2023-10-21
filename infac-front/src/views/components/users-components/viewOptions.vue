@@ -1,5 +1,5 @@
 <template>
-    <div class="main">
+    <div >
         <div class="search-container">
             <div class="inputGroup">
                 <input type="text" autocomplete="off" class="entry" required>
@@ -25,7 +25,6 @@
 
 <style scoped>
     /* ------------------- SEARCH CONTAINER */
-    
     .search-container{ 
         display: flex;
         height: 42px;

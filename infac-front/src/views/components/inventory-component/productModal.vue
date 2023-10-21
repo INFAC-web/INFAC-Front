@@ -10,7 +10,7 @@
                     <div class="inputs-first">
                         <div class="container">
                             <div class="inputGroup">
-                                <input type="text" :class="{ 'warningEntry': continueNext && !product.productCode}" autocomplete="off" class="entry" v-model="product.productCode" required>
+                                <input type="text" :class="{ 'warningEntry': continueNext && !product.productCode}" autocomplete="off" class="entry" v-model="product.productCode" @blur="getProduct" required>
                                 <label for="name" class="label">Id del producto</label>
                             </div>
                             <div class="inputGroup">
@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-    import { registerProduct } from '@/model/products.model.js'
+    import { registerProduct, getFullProduct } from '@/model/products.model.js'
 
     import ErrorHandler from '@/store/errorHandler.js';
     const errorHandler = new ErrorHandler();
@@ -91,39 +91,29 @@
     const { iconPaths } = config;
 
     const emit = defineEmits(['send'])
-
-    const initProduct = () => {
-        return {
-            Providers_idProvider: 1,
-            Categories_idCategory: 1,
-            productCode: null,
-            name: null,
-            description: null,
-            costPrice: null,
-            retailSale: null,
-            wholeSale: null,
-            minStock: null,
-            wholeQuantity: null,
-            iva: null,
-            bonus: null,
-            measure: 'UND',
-            stock: null,
-            imagesFolderSrc:null
-        }
-    }
+    const props = defineProps(['product']);
     
-    const product = ref(initProduct());
+    const product = props.product;
     const continueNext = ref(false);
 
     const addProduct = async () => {
         try{
             continueNext.value = !validation(product.value);
-            if(continueNext.value) throw new Error('Compleete los campos')
+            if(continueNext.value) throw new Error('Complete los campos')
             const response = await registerProduct(product.value);
             product.value = initProduct();
             errorHandler.show(response);
         } catch (error) {
             errorHandler.show(error);  
+        }
+    }
+
+    const getProduct = async () => {
+        try {
+            const theproduct = await getFullProduct(product.value.productCode);
+            
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -154,7 +144,7 @@
 <style scoped>
 
     h2 {
-        font-family: Gilroy-Medium;
+        font-family: Gilroy-Bold    ;
         font-size: 20px;
         text-align: center;
         margin-bottom: 20px;

@@ -1,23 +1,18 @@
 <template>
   <div id="main-container">
     <form class="form">
-       <p class="form-title">Sign in to your account</p>
-        <div class="input-container">
-          <input id="user" name="user" type="text" placeholder="Enter email" v-model="user">
-          <span>
-          </span>
-      </div>
-      <div class="input-container">
-          <input id="pwd" name="pwd" type="password" placeholder="Enter password" v-model="pwd">
+       <p class="form-title">Ingresa a tu cuenta</p>
+        <div class="inputGroup">
+          <input type="text" autocomplete="off" class="entry" v-model="user" required>
+          <label for="name" class="label">Usuario</label>
         </div>
-         <button type="button" class="submit" @click="logIn"> Sign in </button>
-      <button type="button" class="submit" @click="getClients"> Clients </button>
-      <button type="button" class="submit" @click="userStore.logOut"> Logout </button>
-
-      <p class="signup-link">
-        No account?
-        <a href="">Sign up</a>
-      </p>
+        <div class="inputGroup">
+          <input type="text" autocomplete="off" class="entry" v-model="pwd" required>
+          <label for="name" class="label">Contraseña</label>
+        </div>
+  
+         <button type="button" class="submit" @click="logIn"> Ingresar </button>
+      <!--<button type="button" class="submit" @click="userStore.logOut"> Logout </button>-->
    </form>
   </div>
 </template>
@@ -55,11 +50,21 @@
 
 <style scoped>
 
+.main-container {
+  margin: auto;
+}
+
+p {
+  font-family: Gilroy-Medium;
+}
+
+
 .form {
   background-color: #fff;
-  display: block;
+  display: grid;
+  gap: 30px;
   padding: 1rem;
-  max-width: 350px;
+  width: 300px;
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
@@ -72,28 +77,9 @@
   color: #000;
 }
 
-.input-container {
-  position: relative;
-}
-
-.input-container input, .form button {
-  outline: none;
-  border: 1px solid #e5e7eb;
-  margin: 8px 0;
-}
-
-.input-container input {
-  background-color: #fff;
-  padding: 1rem;
-  padding-right: 3rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  width: 300px;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
 .submit {
+  font-family: Gilroy-Medium;
+  border: none;
   display: block;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
@@ -119,4 +105,9 @@
 .signup-link a {
   text-decoration: underline;
 }
+
+.form {
+  margin: auto;
+}
+
 </style>

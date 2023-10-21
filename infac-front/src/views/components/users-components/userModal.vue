@@ -1,242 +1,105 @@
 <template>
     <div class="main-form">
-        <div >
-            <h1 style="font-family: Font-Title; font-size: 20px; text-align: center">AGREGAR PRODUCTO</h1>
-            <p style="font-family: Font-Normal; text-align: center">id producto ?????</p>  
-            <div class="primeraLinea">
-                <div class="contenedor">
-                    <div class="divImagenProducto" style="width: 180px; height: 180px">
-                        <img src="../assets/image/cloud-upload-outline.png" />
-                    </div>
-                    <p style="margin-top: 10px;">Imagen del producto</p>
-                </div>
-
-                <div >
-                    <div>
-                        <div class="idAndNameDiv">
-                            <div>
-                                <input type="text" style="width: 105px; height: 42px" />
-                                <p>Id del producto</p>
-                            </div>
-                            <div>
-                                <input type="text" style="width: 188px; height: 42px" />
-                                <p>Nombre del producto*</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top: -10px;">
-                        <textarea class="textDescription" style="width: 313px; height: 101px"></textarea>
-                        <p>Descripción del producto</p>
-                    </div>
-                </div>
+        <h1>AGREGAR USUARIO</h1>
+        <div class="first-line">
+            <select  class="select" name="Tipo-persona" v-model="user.docType">      
+                <option value="">Tipo de Documento</option>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="CE">Cédula de extranjería</option>
+            </select>
+            <div class="inputGroup">
+                <input type="text" autocomplete="off" class="entry" v-model="user.docNumber" required>
+                <label for="name" class="label">Número de documento</label>
             </div>
-
-            <div class="divSelecteds">
-                <div>
-                    <select style="width: 130px" class="comboBox" name="Proveedor">
-                        <option value="selected">Seleeciona</option>
-                        <option value="Uno">Uno</option>
-                        <option value="Dos">Dos</option>
-                        <option value="Tres">Tres</option>
-                        <option value="Cuatro">Cuatro</option>
-                    </select>
-                    <p>Proveedor</p>
-                </div>
-
-                <div>
-                    <select style="width: 110px" class="comboBox" name="Marca">
-                        <option value="selected">Seleeciona</option>
-                        <option value="Marca1">Marca1</option>
-                        <option value="Marca2">Marca2</option>
-                        <option value="Marca3">Marca3</option>
-                        <option value="Marca4">Marca4</option>
-                    </select>
-                    <p>Marca</p>
-                </div>
-
-                <div>
-                    <select style="width: 130px" class="comboBox" name="Categoria">
-                        <option value="selected">Seleeciona</option>
-                        <option value="Categoria1">Categoria1</option>
-                        <option value="Categoria2">Categoria2</option>
-
-                    </select>
-                    <p>Categoria</p>
-                </div>
-
-                <div>
-                    <select style="width: 107px" class="comboBox" name="Unidad">
-                        <option value="selected">Selecciona</option>
-                        <option value="Unidad1">Unidad1</option>
-                        <option value="Unidad2">Unidad2</option>
-                    </select>
-                    <p>Unidad</p>
-                </div>
-            </div>
-
-            <div class="terceraLinea">  
-                <div> 
-                    <input type="text" style="width: 112px;">
-                    <p>Costo</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 112px;">
-                    <p>Venta al detal*</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 110px;">
-                    <p>Venta al mayor</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 112px;">
-                    <p>Stock Mínimo</p>
-                </div>
-            </div>
-
-            <div class="cuartaLinea"> 
-                <div> 
-                    <input type="text" style="width: 140px;">
-                    <p>Cantidad Mayorista</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 140px;">
-                    <p>Cantidad Actual</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 62px;">
-                    <p>IVA</p>
-                </div>
-                <div> 
-                    <input type="text" style="width: 118px;">
-                    <p>Bonificación</p>
-                </div>
-            </div>
-        
-            <div>  
-                <button class="btnConfirm" style="background-color: #378039;">Registrar</button>
-                <button class="btnDescart" style="background-color: #FF6262;">Descartar </button>
-            </div>
-
         </div>
+        <div class="second-line">
+            <div class="inputGroup">
+                <input type="text" autocomplete="off" class="entry" v-model="user.name" required>
+                <label for="name" class="label">Nombres</label>
+            </div>
+            <div class="inputGroup">
+                <input type="text" autocomplete="off" class="entry" v-model="user.lastName" required>
+                <label for="name" class="label">Apellidos</label>
+            </div>
+        </div>
+
+        <div class="third-line">
+            <div class="inputGroup">
+                <input type="number" autocomplete="off" class="entry" v-model="user.phoneNumber" required>
+                <label for="name" class="label">Número de teléfono</label>
+            </div>
+            <div class="inputGroup">
+                <input type="text" autocomplete="off" class="entry" v-model="user.email" required>
+                <label for="name" class="label">Correo</label>
+            </div>
+            <select  class="select" v-model="user.Rol_idRol">      
+                <option value="">Rol</option>
+                <option value=1>Administrador</option>
+                <option value=2>Empleado</option>
+                <option value=3>Bodega</option>
+            </select>
+        </div>
+       
     </div>
 </template>
 
+<script setup>
+    import { ref } from "vue";
+    import { registerUser } from '@/model/users.model.js'
+
+    const userEntity = {
+        Rol_idRol: '',
+        docType: '',
+        docNumber: '',
+        name: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+    }
+
+    const user = ref(userEntity);
+
+    const addUser = async () => {
+        try {
+           const res = await registerUser(user.value);
+           console.log(res)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    defineExpose({
+        addUser
+    })
+</script>
+
 <style scoped>
 
-.main-form {
-    padding: 30px;
-    border-radius: 20px;
-}
+    .main-form{
+        padding: 20px;
+    }
 
-.primeraLinea {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-}
+    h1 {
+        font-family: Gilroy-Medium;
+        font-size: 20px;
+        text-align: center;
+        padding: 0;
+        margin: 10px;
+        margin-bottom: 20px;
+    }
 
-.btnConfirm {
-  width: 88px;
-  height: 37px;
-  font-family: "Font-Title", sans-serif;
-  font-size: 15px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-right: 7.5px;
-  
-  
-}
+    .first-line, .second-line, .third-line {
+        display: grid;
+        gap: 20px;
+        margin-top: 20px;
+    }
 
-.btnDescart {
-  width: 88px;
-  height: 37px;
-  font-family: "Font-Title", sans-serif;
-  font-size: 15px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-left: 7.5px;
-  
-}
+    .first-line, .second-line{
+        grid-template-columns: 1fr 1fr;
+    }
 
-.idAndNameDiv {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
+    .third-line {
+        grid-template-columns: 1fr 1fr 0.5fr;
+    }
 
-.terceraLinea {
-    display: flex;
-    justify-content: center;
-    gap: 17px;
-}
-
-.cuartaLinea {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-}
-
-.divSelecteds {
-    
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    
-}
-
-select {
-  border-radius: 10px;
-  border: 1px solid #d7d7d7;
-  font-family: Font-Normal;
-  font-size: 15px;
-  height: 42px;
-
-}
-
-.textDescription {
-  border-radius: 10px;
-  border: 1px solid #d7d7d7;
-  display: inline-block;
-  resize: none;
-  font-family: Font-Normal;
-  font-size: 15px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.contenedor {
-  text-align: center;
-}
-.divImagenProducto {
-  border-radius: 10px;
-  border: 1px solid #d7d7d7;
-  display: inline-block;
-  cursor: pointer;
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-
-
-
-}
-
-input {
-  border: 1px solid #d7d7d7;
-  border-radius: 10px;
-  height: 40px;
-  padding-left: 5px;
-  font-family: Font-Normal;
-  
-}
-
-p {
-  font-family: Font-Title;
-  font-size: 15px;
-  color: #a1a1a1;
-  margin-top: 5px;
-  text-align: left;
-}
 </style>

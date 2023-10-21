@@ -14,7 +14,7 @@
                         <p class="info-label">IVA</p>
                     </div>
                     <div class="info-container">
-                        <p class="info-value">${{ total }}</p>
+                        <p class="info-value">{{ formatter(total) }}</p>
                         <p class="info-label">Sub Total</p>
                     </div>
                     <div class="info-container">
@@ -22,7 +22,7 @@
                         <p class="info-label">Saldo a favor</p>
                     </div>
                     <div class="info-container">
-                        <p class="info-value">$0</p>
+                        <p class="info-value">{{  formatter(fullTotal) }}</p>
                         <p class="info-label">Total</p>
                     </div>
                 </div>
@@ -37,7 +37,16 @@
     import { ref } from "vue";
     const emit = defineEmits(['save', 'facture']);
 
-    const { quant, total } = defineProps(['quant', 'total'])
+    const { quant, total, fullTotal } = defineProps(['quant', 'total', 'fullTotal'])
+
+    const formatter = (price) => {
+        let moneyFormat = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+         });
+
+         return moneyFormat.format(price)
+    }
 </script>
 
 <style scoped>

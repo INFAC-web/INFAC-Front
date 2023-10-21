@@ -15,7 +15,7 @@
             <td>{{ item.totalValue }}</td>
 
             <td class="buttons-opts">
-                <button @click="deleteItem(item.idProduct)" class="disable-button">
+                <button @click="deleteItem(item.Products_idProduct)" class="disable-button">
                     ELIMINAR
                 </button>
             </td>
@@ -63,10 +63,6 @@
             }
 
             const itemInList = items.value.find(item => item.Products_idProduct === idProduct);
-
-            if(newQuant > itemInList.stock) {
-                throw new Error('Ingrese una cantidad válida')
-            } 
             
             itemInList.quantity = parseInt(newQuant);
             itemInList.totalValue = itemInList.quantity * itemInList.unityPrice;
@@ -98,7 +94,11 @@
 
 <style scoped>
     @import url('../../../assets/styles/tables.css');
-    
+
+    tr {
+    height: 70px;
+}
+
     .withLine {
         border-bottom: 1px solid black;
     }

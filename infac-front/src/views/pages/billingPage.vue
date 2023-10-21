@@ -4,22 +4,22 @@
         <Transition v-bind="modal" v-if="modal" class="modal">
             <PaymentModal @aceptAction="factureAcept" aceptText="Aceptar"> 
                 <template v-slot:body>
-                    <PaymentFields ref="payFieldsComp"/>
+                    <PaymentFields :fullTotal="totalTotal" ref="payFieldsComp"/>
                 </template>
             </PaymentModal>
         </Transition>
 
-        <Transition v-bind="freeze" v-if="freeze">
-            <freezeInvoices class="freezeC" @show="showFreeze" @send="loadFreezeInvoice"/>
+        <Transition name="freeze">
+            <freezeInvoices class="freezeC" @show="showFreeze" @send="loadFreezeInvoice" v-if="freeze"/>
         </Transition>
         
         <Transition class="fade">   
-            <div v-bind="modal" v-if="modal" @click.prevent="modal=false" class="overlay"></div>
+            <div @click.prevent="modal=false" class="overlay" v-if="modal" ></div>
         </Transition>
 
         <!-- Otros componentes -->
         <div style="display: none;">
-            <invoiceComponent ref="invoiceGenerator"/>
+            <InvoiceElec     ref="invoiceGenerator"/>
         </div>
         
         <div class="header"> 
@@ -35,7 +35,7 @@
                     <TableBody ref="tableComp" @updateItems="setItems" :items="itemsList" :garbage="true"/>
                 </template>
             </TableProducts>
-            <DetailFields @save="saveLocalStorage" @facture ="loadModal" :quant="itemsQuant" :total="totalValue"/>
+            <DetailFields @save="saveLocalStorage" @facture ="loadModal" :quant="itemsQuant" :total="totalValue" :fullTotal="totalTotal"/>
         </div>
     </div>
 </template>
@@ -57,7 +57,7 @@
 
     import { getProductFromApi } from '@/model/products.model.js';
 
-    import invoiceComponent from '../components/billing-formats/posInvoice.vue';
+    import InvoiceElec from '../components/billing-formats/elecInvoice.vue';
 
     import ErrorHandler from '@/store/errorHandler.js';
     const errorHandler = new ErrorHandler();
@@ -72,6 +72,9 @@
     //Interacción con factura --> Variables reactivas
     const itemsQuant = ref(0);
     const totalValue = ref(0);
+    const totalTotal = ref(0);
+    const iva = ref(0)
+    const impuestos = ref(0);
     const dicount = ref(0);
     const itemsList = ref([]);
 
@@ -90,9 +93,14 @@
     /* Observa cambios en la lista para actualizar los datos relacionados */
     watch(itemsList.value, (newItems) => {
         let total = 0;
+        let fullTotal = 0;
+        let impuesto = 0;
         newItems.forEach((item) => {
             total += item.totalValue;
+            impuesto = item.totalValue * (item.iva / 100)
+            fullTotal += item.totalValue + impuesto;
         })
+        totalTotal.value = fullTotal;
         totalValue.value = total;
         itemsQuant.value = itemsList.value.length;
     });
@@ -177,11 +185,13 @@
                 Users_idUser: payFieldsComp.value.getUserID(),
                 typePay: payFieldsComp.value.getOptionPay()
             }
-            await payFieldsComp.value.sendInvoice(invoiceInfo);
+            
+            const result = await payFieldsComp.value.sendInvoice(invoiceInfo);
+
+            console.log(result);
 
             if(invoiceGenerator.value){
-                console.log(invoiceGenerator.value)
-                invoiceGenerator.value.generatePDF(invoiceInfo);
+                invoiceGenerator.value.generatePDF(result.insertId);
             }
 
         } catch (error) {
@@ -228,6 +238,7 @@
 </script>
 
 <style scoped>
+
     #content { 
         position: relative;
         background-color: #FFFFFF;
@@ -262,5 +273,16 @@
         width: auto;
         margin: auto 0;
         border-radius: 5px;
+    }
+
+
+    .freeze-enter-active,
+    .freeze-leave-active {
+        transition: transform 0.5s;
+    }
+
+    .freeze-enter-from, 
+    .freeze-leave-to /* .modal-leave-active en <2.1.8 */ {
+        transform: translateX(100%); /* Empieza desde la derecha */
     }
 </style>

@@ -17,7 +17,6 @@ import { ref, watch} from "vue";
     const quant = ref(props.quant);
 
     const CSShead = ref('withLine');
-
  
 </script>
     
@@ -26,7 +25,7 @@ import { ref, watch} from "vue";
     @import url('../../../assets/styles/tables.css');
 
     .withLine {
-        border-bottom: 1px solid black;
+        border-bottom: 1px solid rgb(179, 179, 179);
     }
 
     #quantity {

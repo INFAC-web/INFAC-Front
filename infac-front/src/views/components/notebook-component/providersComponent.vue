@@ -6,7 +6,7 @@
         </transition>
     
         <Transition v-bind="modal" v-if="modal" class="modal">
-            <ModalTemplate @aceptAction="sendProduct" aceptText="Aceptar">
+            <ModalTemplate @aceptAction="sendProvider" aceptText="Aceptar">
                 <template v-slot:body>
                     <ProviderModal :provider="currentProvider"/>
                 </template>
@@ -17,8 +17,9 @@
             <h2 class="subtitle">
                 <span>PROVEEDORES</span>
             </h2>
+            <ViewOptions class="viewOptions" @showModal="showModal"/>
         </div>
-        <ViewOptions @showModal="showModal"/>
+        
         <TableProviders :labels="labels">
             <template v-slot:body>
                 <BodyTable @setProviders="setProviders" @setCurrentProvider="setCurrentProvider" @showModal="showModal">
@@ -41,7 +42,7 @@
     const modal = ref(false);
 
     const providers = ref(null);
-    const currentProvider = ref(null);
+    const currentProvider = ref('');
 
     const labels = ['NIT', 'Empresa', 'Representante', 'Contacto', 'Acciones'];
 
@@ -52,6 +53,12 @@
 
     getProviders();
 
+    //TODO --> ruta para registrar un nuevo proveedor
+    const sendProvider = async () => {
+    }
+
+
+    //------------------------------------ Setters
     const setProviders = (allProviders) => {
         providers.value = allProviders;
     }
@@ -67,8 +74,15 @@
 </script>
 
 <style scoped>
-    @import url('../../../assets/styles/tables.css');
 
+    .header {
+            display: flex;
+            justify-content: space-between;
+    }
+
+    .viewOptions {
+    }
+  
     .subtitle {
         font-family: Gilroy-Bold;
         font-size: 20px;

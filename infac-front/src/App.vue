@@ -19,11 +19,19 @@
 
 <script setup>
     import NavBar from '@/views/layouts/navBar.vue'
+    import { onMounted } from 'vue';
 
     import { useUserCounterStore } from './store/userStore.js'
     const userStore = useUserCounterStore();
 
     userStore.refreshToken();
+
+    onMounted(() => {
+        window.addEventListener('mousemove', (event) => {
+            console.log("Moviendo mouse")
+        })
+    })
+
 </script>
 
 <style>
@@ -36,7 +44,7 @@
     
     body {
         margin: 0;
-        background: #F8F7F7;
+        background: #F2F2F2;
         overflow-y: hidden;
     }
 </style>

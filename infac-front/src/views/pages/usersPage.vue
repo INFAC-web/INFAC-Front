@@ -1,28 +1,69 @@
 <template>
     <div class="main-inventory">
-        <transition v-bind="modal" v-if="modal" class="modal">
-            <AddUserForm class="modal"/>
+        <!-- Componentes modal -->
+        <transition name="fade">
+            <div v-if="modal" @click.prevent="modal=false" class="overlay"></div>
         </transition>
-
-        <transition class="fade">
-            <div v-bind="modal" v-if="modal" @click.prevent="modal=false" class="overlay"></div>
-        </transition>
-
+    
+        <Transition v-bind="modal" v-if="modal" class="modal">
+            <ModalTemplate @aceptAction="sendUser" aceptText="Aceptar">
+                <template v-slot:body>
+                <AddUserForm ref="userComponent" />
+                </template>
+            </ModalTemplate>
+        </Transition>
         <h1 class="title">USUARIOS</h1>
-        <Users @updateModal="modal=true" />
+        <div class="inventory-table">
+            <ViewOptions @showModal="showModal"></ViewOptions>
+            <UserTable class="user-table" :labels="labels">
+                <template v-slot:body>
+                    <BodyUsers>
+                        
+                    </BodyUsers>
+                </template>
+            </UserTable>
+        </div>
     </div>
 </template>
 
 <script setup>
     import { ref } from 'vue';
 
-    import Users from '../components/users-components/usersTable.vue';
-    import AddUserForm from '../components/inventory-component/productModal.vue';
+    import AddUserForm from '../components/users-components/userModal.vue';
+    import ViewOptions from '../components/users-components/viewOptions.vue'
+    import ModalTemplate from '../components/comun-components/modalTemplate.vue'
+
+    import UserTable from '../components/comun-components/tableTemplate.vue';
+    import BodyUsers from '../components/users-components/bodyUsers.vue'
+
+    const labels = ['Documento', 'Usuario', 'Nombres', 'Apellidos', 'Correo', 'Acciones'];
 
     const modal = ref(false);
+
+    const userComponent = ref(null);
+
+    const showModal = () => {
+        modal.value = true;
+    }
+
+    const sendUser = () => {
+        userComponent.value.addUser();
+    }
+
+    const setUser = ()=> {}
+
 </script>
 
 <style scoped>
+
+    .main-inventory {
+        width: var(--some-tables);
+    }
+    
+    .user-table {
+        background: white;
+        border-radius: 10px;
+    }
 
     .overlay {
         position: absolute;

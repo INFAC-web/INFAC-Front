@@ -50,7 +50,6 @@
     const props = defineProps(['provider']);
 
     const { provider } = props;
-
 </script>
 
 <style scoped>

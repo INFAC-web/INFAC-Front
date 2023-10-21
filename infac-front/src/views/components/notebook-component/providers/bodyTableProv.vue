@@ -31,15 +31,20 @@
     }
 
     const getProvider = async (id) => {
-        console.log("id" + id)
         const provider = await getProviderFromApi(id);
-        emit('setCurrentProvider', provider);
         emit('showModal', true);
+        emit('setCurrentProvider', provider);
+        
+        setTimeout(() => {
+            
+        }, 100)
     }
 
     getProviders();
 </script>
 
 <style scoped>
-
+    tr {
+        height: 70px;
+    }
 </style>

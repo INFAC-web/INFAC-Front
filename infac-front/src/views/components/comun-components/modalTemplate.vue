@@ -25,7 +25,9 @@
 
 <style scoped>
     #modal {
+        position: relative;
         border-radius: 10px;
+        background: #FFFFFF;
     }
 
     #buttons {

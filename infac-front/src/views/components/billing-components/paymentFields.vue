@@ -26,17 +26,17 @@
         
         <div id="third-line">
             <div class="inputGroup money">
-                    <input type="text" autocomplete="off" class="entry" required>
+                    <input type="number" autocomplete="off" class="entry" v-model="total" required>
                     <label for="name" class="label">Total</label>
             </div>
             <div class="inputGroup money">
-                    <input type="text" autocomplete="off" class="entry" required>
+                    <input type="text" autocomplete="off" class="entry" v-model="money" @input="getCambio" required>
                     <label for="name" class="label">Recibido</label>
             </div>
         </div>
 
         <div id="change">
-            <p class="info-value">$0</p>
+            <p class="info-value">${{ change }}</p>
             <p class="info-label">Cambio</p>
         </div>
     </div>
@@ -50,9 +50,12 @@
     import ErrorHandler from '@/store/errorHandler.js'; // Asegúrate de importar la clase
     const errorHandler = new ErrorHandler();
 
-    const props = defineProps(['invoiceInfo']);
+    const props = defineProps(['invoiceInfo', 'fullTotal']);
 
     const invoiceInfo = ref(props.invoiceInfo)
+    const total = ref(props.fullTotal)
+    const money = ref(0)
+    const change = ref(0)
 
     const optionPay = ref('');
     const nickName = ref('');
@@ -76,11 +79,20 @@
         try {
             if(!optionPay.value) throw new Error ('Seleccione una opción de pago válida')
             const res = await generateInvoice(invoiceInfo);
+
+            return res;
         } catch (error) {
             errorHandler.show(error);
         }
     }
-
+    
+    const getCambio = () => {
+        console.log(money.value)
+        console.log(total.value)
+        if(!total.value || !money.value) {change.value = 0; return};
+        if(money.value < total.value) {change.value = 0; return};
+        change.value =  money.value - total.value;
+    }
     /* Retorna la opción de pago actual */
     const getOptionPay = () => {
         return optionPay.value;

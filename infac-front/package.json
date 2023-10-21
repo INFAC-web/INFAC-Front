@@ -8,6 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pdfme/common": "^2.2.1",
+    "@pdfme/generator": "^2.2.1",
+    "@pdfme/ui": "^2.2.1",
+    "@vueuse/core": "^10.5.0",
     "axios": "^1.5.1",
     "html2pdf.js": "^0.10.1",
     "pinia": "^2.1.6",

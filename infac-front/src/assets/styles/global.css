@@ -1,6 +1,7 @@
     :root {
         --height-inputs: 42px;
-        --border-inputs: 10px;
+        --border-inputs: 9px;
+        --some-tables: 70%;
     }
     
     .Toastify__toast-body {
@@ -122,6 +123,30 @@
         position: absolute;
         top: 0;
         left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 101;
+    }
+
+    .modal-enter-active,
+    .modal-leave-active {
+      transition: all 0.2s ease;
+    }
+
+    .modal-enter-from, 
+    .modal-leave-to /* .modal-leave-active en <2.1.8 */ {
+        opacity: 0;
+    }
+
+    /*
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
         bottom: 0;
         right: 0;
         z-index: 100;
@@ -138,11 +163,14 @@
         z-index: 101;
     }
 
-    .v-enter-active, .v-leave-active {
-        transition: opacity 0.3s;
+    .v-enter-active, 
+    .v-leave-active {
+        transition: all 0.25s ease; 
     }
 
     .v-enter-from,
     .v-leave-to {
         opacity: 0;
+        transform: scale(1.1);
     }
+    */
