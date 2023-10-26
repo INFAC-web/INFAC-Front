@@ -3,17 +3,37 @@ const routes = [
     path: '/login', name:'index', component: () => import('../views/pages/LoginPage.vue')
   },
   {
+    path: '/changepwd', name:'changepwd', component: () => import('../views/pages/changePasswd.vue')
+  },
+  {
+    path: '/dashboard', name:'dashboard', 
+    component: () => import('../views/pages/dashBoardPage.vue'),
+    meta: {
+      auth: true,
+      roles: ['administrador']
+    }
+  },
+  {
     path: '/inventory', name:'inventory', 
     component: () => import('../views/pages/inventoryPage.vue'),
     meta: {
       auth: true,
+      roles: ['administrador', 'bodega']
     }
   },
   {
-    path: '/billing', name:'billing', component: () => import('../views/pages/billingPage.vue')
+    path: '/billing', name:'billing', component: () => import('../views/pages/billingPage.vue'),
+    meta: {
+      auth: true,
+      roles: ['administrador', 'empleado']
+    }
   },
   {
-    path: '/users', name:'users', component: () => import('../views/pages/usersPage.vue')
+    path: '/users', name:'users', component: () => import('../views/pages/usersPage.vue'),
+    meta: {
+      auth: true,
+      roles: ['administrador']
+    }
   },
   {
     path: '/notebook', 
@@ -22,7 +42,7 @@ const routes = [
     children: [
       {
         path:'history',
-        component: () => import('@/views/components/notebook-component/historyComponent.vue')
+        component: () => import('@/views/components/notebook-component/historyComponent.vue'),
       },
       {
         path:'providers',
@@ -37,7 +57,10 @@ const routes = [
         component: () => import('@/views/components/notebook-component/historyComponent.vue')
       }
 
-    ]
+    ], 
+    meta: {
+      auth: true,
+    }
   },
 ];
 

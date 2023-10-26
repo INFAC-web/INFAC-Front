@@ -59,7 +59,25 @@ export const getProductFromApi = async ( productCode ) => {
     }
 }
 
-/* Obtiene un producto por código de producto */
+
+export const getProductByCode = async ( productCode ) => {
+    try {
+        await userStore.refreshToken();
+        const res = await api({
+            url: '/products/code/' + productCode,
+            method: 'get',
+            headers: {
+                'Authorization': 'Bearer ' + userStore.token.value
+            }
+        });   
+        
+        return res.data;
+    } catch (error) {
+        throw error.response;
+    }
+}
+
+/* Obtiene un producto por id de producto */
 export const getFullProduct = async ( productId ) => {
     try {
         await userStore.refreshToken();

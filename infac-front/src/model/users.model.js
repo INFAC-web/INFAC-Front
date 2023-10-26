@@ -56,6 +56,7 @@ export const registerUser = async ( userInfo ) => {
             data: userInfo
         });   
 
+        console.log(res);
         return res.data;
     } catch (error) {
         console.log(error.response);

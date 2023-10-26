@@ -14,6 +14,7 @@ class myUseUserStore {
 
         this.token = ref(null);
         this.expiresIn = ref(null);
+        
     }
     
     async refreshToken () {
@@ -37,9 +38,15 @@ class myUseUserStore {
         }
     }
 
+    
     resetStore () {
         this.token.value = null;
         this.expiresIn.value = null;
+    }
+
+    //Obtener la lista de permisos del usuario
+    async getPermissions() {
+
     }
 }
 

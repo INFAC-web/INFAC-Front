@@ -39,11 +39,11 @@
         padding-top: 50px;
         padding-left: 7%;
         padding-right: 3%;
-        
     }
     
     body {
         margin: 0;
+        padding: 0;
         background: #F2F2F2;
         overflow-y: hidden;
     }

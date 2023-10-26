@@ -81,27 +81,32 @@
 </template>
 
 <script setup>
-    import { registerProduct, getFullProduct } from '@/model/products.model.js'
+    import { registerProduct, getFullProduct, getProductByCode} from '@/model/products.model.js'
 
     import ErrorHandler from '@/store/errorHandler.js';
     const errorHandler = new ErrorHandler();
 
     import { config } from '@/config.js';
-    import { onMounted, onUpdated, ref, watch } from 'vue';
+    import { onMounted, ref } from 'vue';
     const { iconPaths } = config;
 
     const emit = defineEmits(['send'])
     const props = defineProps(['product']);
     
-    const product = props.product;
+    const product = ref(props.product);
     const continueNext = ref(false);
 
+    onMounted(() => {
+        console.log("Producto")
+        console.log(product)
+    })
+    
     const addProduct = async () => {
         try{
             continueNext.value = !validation(product.value);
             if(continueNext.value) throw new Error('Complete los campos')
             const response = await registerProduct(product.value);
-            product.value = initProduct();
+            product.value = props.product;
             errorHandler.show(response);
         } catch (error) {
             errorHandler.show(error);  
@@ -110,10 +115,13 @@
 
     const getProduct = async () => {
         try {
-            const theproduct = await getFullProduct(product.value.productCode);
-            
+            const response = await getProductByCode(product.value.productCode);
+            product.value = response;
+
         } catch (error) {
+            console.log("ERROR")
             console.log(error)
+            errorHandler.show(error)
         }
     }
 

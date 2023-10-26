@@ -21,6 +21,8 @@
     import { ref } from 'vue';
     import api from '../../../model/axios/axios.js';
     import { useUserCounterStore } from '../../../store/userStore.js';
+    import router from '@/router/index.js'
+
   
     const userStore = useUserCounterStore();
 
@@ -28,10 +30,27 @@
     const pwd = ref('');
 
     const logIn = async () => {
-        const userInfo = {nameUser: user.value, password: pwd.value}    
-        const response = await api.post("/auth/login", userInfo);    
-        console.log("Inicio de sesion Exitoso")
-        userStore.refreshToken();
+        try {
+          const userInfo = {nameUser: user.value, password: pwd.value}    
+          const response = await api.post("/auth/ ", userInfo);   
+
+          console.log(response)
+          
+          if(response.data.status == 'pending'){
+            console.log("Redirijido")
+            router.push({name: 'changepwd'})
+
+          } else {
+            console.log("Inicio de sesion Exitoso")
+            await userStore.refreshToken();
+            router.push({name: 'users'});
+          }
+
+         
+        } catch (error) {
+          
+        }
+       
     }
 
     const getClients = async () => {

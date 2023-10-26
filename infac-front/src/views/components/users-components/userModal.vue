@@ -61,8 +61,8 @@
 
     const addUser = async () => {
         try {
+            console.log(user.value)
            const res = await registerUser(user.value);
-           console.log(res)
         } catch (error) {
             console.log(error)
         }

@@ -3,8 +3,19 @@
         --border-inputs: 9px;
         --some-tables: 70%;
     }
+
+    .notis-cont{
+        flex: 1;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid #E5E5E5;
+      } 
+
+      .super-main{
+        display: flex;
+      }
     
-    .Toastify__toast-body {
+    .Toastify__toast-body { 
         font-family: Gilroy-Medium;
     }
     

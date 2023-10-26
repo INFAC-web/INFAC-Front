@@ -1,17 +1,16 @@
 <template>
     <div class="main-inventory">
         <!-- Componentes modal -->
-        <transition name="fade">
-            <div v-if="modal" @click.prevent="modal=false" class="overlay"></div>
-        </transition>
-    
-        <Transition v-bind="modal" v-if="modal" class="modal">
-            <ModalTemplate @aceptAction="sendUser" aceptText="Aceptar">
+        <Transition name="modal">
+          <div class="overlay" v-if="modal">
+            <ModalTemplate @aceptAction="sendUser" aceptText="Aceptar" ref="modalElement">
                 <template v-slot:body>
-                <AddUserForm ref="userComponent" />
+                    <AddUserForm ref="userComponent" />
                 </template>
             </ModalTemplate>
-        </Transition>
+          </div>
+      </Transition>
+
         <h1 class="title">USUARIOS</h1>
         <div class="inventory-table">
             <ViewOptions @showModal="showModal"></ViewOptions>
@@ -28,6 +27,8 @@
 
 <script setup>
     import { ref } from 'vue';
+    import { onClickOutside } from '@vueuse/core';
+
 
     import AddUserForm from '../components/users-components/userModal.vue';
     import ViewOptions from '../components/users-components/viewOptions.vue'
@@ -41,6 +42,11 @@
     const modal = ref(false);
 
     const userComponent = ref(null);
+    const modalElement = ref(null);
+
+    onClickOutside(modalElement, () => {
+        modal.value = false
+    });
 
     const showModal = () => {
         modal.value = true;
@@ -50,7 +56,9 @@
         userComponent.value.addUser();
     }
 
-    const setUser = ()=> {}
+    const setUser = ()=> {
+        
+    }
 
 </script>
 

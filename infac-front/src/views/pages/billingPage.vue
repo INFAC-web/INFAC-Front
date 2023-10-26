@@ -1,25 +1,24 @@
 <template>
     <div id="billing-main">
         <!-- Componente modal -->
-        <Transition v-bind="modal" v-if="modal" class="modal">
-            <PaymentModal @aceptAction="factureAcept" aceptText="Aceptar"> 
+        <Transition name="modal">
+          <div class="overlay" v-if="modal">
+            <PaymentModal @aceptAction="factureAcept" aceptText="Aceptar" ref="modalElement"> 
                 <template v-slot:body>
                     <PaymentFields :fullTotal="totalTotal" ref="payFieldsComp"/>
                 </template>
             </PaymentModal>
+          </div>
         </Transition>
+
 
         <Transition name="freeze">
             <freezeInvoices class="freezeC" @show="showFreeze" @send="loadFreezeInvoice" v-if="freeze"/>
         </Transition>
-        
-        <Transition class="fade">   
-            <div @click.prevent="modal=false" class="overlay" v-if="modal" ></div>
-        </Transition>
-
+    
         <!-- Otros componentes -->
         <div style="display: none;">
-            <InvoiceElec     ref="invoiceGenerator"/>
+            <InvoiceElec ref="invoiceGenerator"/>
         </div>
         
         <div class="header"> 
@@ -41,6 +40,7 @@
 </template>
 
 <script setup>
+    import { onClickOutside } from '@vueuse/core';
     import { ref, watch, onMounted } from 'vue';
 
     import ClientFields from '../components/billing-components/clientFields.vue';
@@ -88,6 +88,8 @@
     const clientComponent = ref(null);
     const productComponent = ref(null);
 
+    const modalElement = ref(null);
+
     const invoiceGenerator = ref(null);
     
     /* Observa cambios en la lista para actualizar los datos relacionados */
@@ -103,6 +105,10 @@
         totalTotal.value = fullTotal;
         totalValue.value = total;
         itemsQuant.value = itemsList.value.length;
+    });
+
+    onClickOutside(modalElement, () => {
+        modal.value = false
     });
 
     /* Canal de comunicación entre componentes hijos */

@@ -6,6 +6,7 @@ export const useUserCounterStore = defineStore('user', () => {
     
     const token = ref(null);
     const expiresIn = ref(null);
+    const rol = ref(null);
     
     const refreshToken = async () => {
         try {
@@ -13,7 +14,6 @@ export const useUserCounterStore = defineStore('user', () => {
             const res = await api.get('/auth/refresh');
             token.value = res.data.token;
             expiresIn.value = res.data.expiresIn;
-
         } catch (error) {
             console.log(error)
         }

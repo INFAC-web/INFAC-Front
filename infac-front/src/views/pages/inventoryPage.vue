@@ -1,89 +1,113 @@
 <template>
-    <div class="main-inventory">
+  <div class="super-main">
+      <div class="main-inventory">
       <!-- Componentes modal -->
       <Transition name="modal">
-          <div class="overlay" v-if="modal">
-            <ModalTemplate class="modal-content" @aceptAction="sendProduct" aceptText="Aceptar" ref="modalElement">
-              <template v-slot:body>
-                <AddProductForm :product="currentProduct" ref="productsFields" />
-              </template>
-            </ModalTemplate>
-          </div>
+        <div class="overlay" v-if="modal">
+          <ModalTemplate class="modal-content" @aceptAction="sendProduct" aceptText="Aceptar" ref="modalElement">
+            <template v-slot:body>
+              <AddProductForm :product="currentProduct" ref="productsFields" />
+            </template>
+          </ModalTemplate>
+        </div>
       </Transition>
-  
+
       <!-- Componentes para inventario -->
       <h1 class="title">INVENTARIO</h1>
-      
+
       <div class="inventory-table">
-        <ViewOptions @updateModal="modal=true"/>
-      
+        <ViewOptions @updateModal="modal = true" />
+
         <TableTemplateVue :labels="labels">
-            <template v-slot:body>
-                <InventoryBody @loadProduct="loadInfo" :items="items"/>
-            </template>
+          <template v-slot:body>
+            <InventoryBody @loadProduct="loadInfo" :items="items" />
+          </template>
         </TableTemplateVue>
       </div>
 
     </div>
-  </template>
+    <notis class="notis-cont"></notis>
+  </div>
+  
+</template>
   
 <script setup>
-  import { ref } from 'vue';
-  import { onClickOutside } from '@vueuse/core';
+import { ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
-  import ViewOptions from '../components/inventory-component/viewOptions.vue';
+import ViewOptions from '../components/inventory-component/viewOptions.vue';
 
-  import AddProductForm from '../components/inventory-component/productModal.vue';
-  import ModalTemplate from '../components/comun-components/modalTemplate.vue';
+import AddProductForm from '../components/inventory-component/productModal.vue';
+import ModalTemplate from '../components/comun-components/modalTemplate.vue';
 
-  import TableTemplateVue from '../components/comun-components/tableTemplate.vue';
-  import InventoryBody from '../components/inventory-component/inventoryBody.vue'
-  
-  const modal = ref(false);
-  const modalElement = ref(null);
+import TableTemplateVue from '../components/comun-components/tableTemplate.vue';
+import InventoryBody from '../components/inventory-component/inventoryBody.vue'
 
-  const labels = ['Codigo', 'Imagen','Nombre', 'Categoría', 'Precio', 'Stock', 'Acciones'];
+import notis from '../components/notification-components/notificationsComponent.vue';
 
-  const items = ref(null);
-  
-  //Componentes
-  const productsFields = ref(''); //Componente de producto
-  const currentProduct = ref(''); //último producto obtenido para modal 
+const productEntity = {
+  productCode: '',
+  name: '',
+  description: '',
+  Providers_idProvider: 1,
+  Categories_idCategory: 1,
+  measure: 'UND',
+  costPrice: '',
+  retailSale: '',
+  wholeSale: '',
+  minStock: '',
+  wholeQuantity: '',
+  stock: '',
+  iva: '',
+  bonus: ''
+}
 
-  onClickOutside(modalElement, () => {
-    modal.value = false
-    currentProduct.value = '';
-  });
-  
-  const sendProduct = () => {
-    productsFields.value.addProduct()
-  }
+const modal = ref(false);
+const modalElement = ref(null);
 
-  const loadInfo = (product) => {
-    setProduct(product);
-    modal.value = true;
-  }
+const labels = ['Codigo', 'Imagen', 'Nombre', 'Categoría', 'Precio', 'Stock', 'Acciones'];
 
-  //---------------------------------- Setters
-  const setItems = (items) => {
-    items.value = items;
-  }
+const items = ref(null);
 
-  const setProduct = (product) => {
-    currentProduct.value = product;
-  }
+//Componentes
+const productsFields = ref(''); //Componente de producto
+const currentProduct = ref({ ...productEntity }); //último producto obtenido para modal 
+
+onClickOutside(modalElement, () => {
+  modal.value = false
+  currentProduct.value = { ...productEntity };
+});
+
+const sendProduct = () => {
+  productsFields.value.addProduct()
+}
+
+const loadInfo = (product) => {
+  setProduct(product);
+  modal.value = true;
+}
+
+//---------------------------------- Setters
+const setItems = (items) => {
+  items.value = items;
+}
+
+const setProduct = (product) => {
+  currentProduct.value = product;
+}
 
 </script>
   
 <style scoped>
-  .main-inventory {
-    width: var(--some-tables);
-  }
 
-  .title {
-    font-family: Gilroy-Bold;
-    font-size: 25px;
-    margin-bottom: 20px;
-  }
+.main-inventory {
+  width: var(--some-tables);
+  margin-right: 50px;
+}
 
+.title {
+  font-family: Gilroy-Bold;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
 </style>

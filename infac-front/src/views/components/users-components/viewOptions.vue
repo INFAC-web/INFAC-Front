@@ -27,6 +27,7 @@
     /* ------------------- SEARCH CONTAINER */
     .search-container{ 
         display: flex;
+        justify-content: space-between;
         height: 42px;
         margin-bottom: 25px;
     }
