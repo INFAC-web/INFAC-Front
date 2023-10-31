@@ -1,18 +1,16 @@
 <template>
     <div class="history-container">
         <!-- Componentes modal -->
-        <transition name="fade">
-            <div v-if="modal" @click.prevent="showModal(false)" class="overlay"></div>
-        </transition>
-    
-        <Transition v-bind="modal" v-if="modal" class="modal">
-            <ModalTemplate @aceptAction="sendProvider" aceptText="Aceptar">
-                <template v-slot:body>
-                    <ProviderModal :provider="currentProvider"/>
-                </template>
-            </ModalTemplate>
+        <Transition name="modal">
+            <div class="overlay" v-if="modal">
+                <ModalTemplate @aceptAction="sendProvider" aceptText="Aceptar" ref="modalElement">
+                    <template v-slot:body>
+                        <ProviderModal :provider="currentProvider"/>
+                    </template>
+                </ModalTemplate>
+            </div>
         </Transition>
-  
+
         <div class="header">
             <h2 class="subtitle">
                 <span>PROVEEDORES</span>
@@ -31,6 +29,8 @@
 
 <script setup>
     import { ref } from "vue"
+    import { onClickOutside } from '@vueuse/core';
+
     import { getProvidersFromApi } from '@/model/providers.model.js'
 
     import TableProviders from '../../components/comun-components/tableTemplate.vue';
@@ -40,11 +40,16 @@
     import ProviderModal from './providers/providerModal.vue'
 
     const modal = ref(false);
+    const modalElement = ref(null);
 
     const providers = ref(null);
     const currentProvider = ref('');
 
     const labels = ['NIT', 'Empresa', 'Representante', 'Contacto', 'Acciones'];
+
+    onClickOutside(modalElement, () => {
+        modal.value = false
+    });
 
     const getProviders = async () => {
         providers.value = await getProvidersFromApi();

@@ -7,6 +7,7 @@
             <li id="nav-bar-li">
                 <div id="nav-bar">
                     <ul id="list-routes">
+                        <!--
                         <li>
                             <router-link to="/dashboard" class="link" active-class="link-selected">
                                 <svg class="svg-icon" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,6 +18,7 @@
                                 </svg>
                             </router-link>
                         </li>
+                         -->
                         <li>
                             <router-link to="/inventory" class="link" active-class="link-selected">
                                 <svg class="svg-icon" width="17" height="25" viewBox="0 0 17 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,21 +55,27 @@
                         </li>
                     </ul>
                     <ul id="list-options">
+                        <!--
                         <li>
                             <router-link to="/inventory">
                                 <img :src="`${iconPaths.NavBarPath}/notifications-icon.svg`" alt="">
                             </router-link>
                         </li>
+                        -->
                         <li>
-                            <button class="button">
-                                <img :src="`${iconPaths.NavBarPath}/perfil-icon.svg`" alt="">
+                            <button class="button" @click="salir">
+                                <svg width="25" height="20" viewBox="0 0 25 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16.0385 5.5V3.25C16.0385 2.65326 15.8055 2.08097 15.3907 1.65901C14.976 1.23705 14.4135 1 13.8269 1H3.21154C2.625 1 2.06249 1.23705 1.64774 1.65901C1.233 2.08097 1 2.65326 1 3.25V16.75C1 17.3467 1.233 17.919 1.64774 18.341C2.06249 18.7629 2.625 19 3.21154 19H13.8269C14.4135 19 14.976 18.7629 15.3907 18.341C15.8055 17.919 16.0385 17.3467 16.0385 16.75V14.5M19.5769 5.5L24 10M24 10L19.5769 14.5M24 10H8.90625" stroke="#616161" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                             </button>
                         </li>
+                        <!--
                         <li>
                             <router-link to="/inventory">
                                 <img :src="`${iconPaths.NavBarPath}/config-icon.svg`" alt="">
                             </router-link>
                         </li>
+                        -->
                     </ul>
                 </div>
             </li>
@@ -78,9 +86,21 @@
 
 <script setup>        
     import { config } from '@/config.js';
+    import router from '@/router/index.js'
+
+    import { useUserCounterStore } from '../../store/userStore.js';
+
     const { iconPaths } = config
 
+    const userStore = useUserCounterStore();
+
     console.log(iconPaths.NavBarPath);
+
+    const salir = async () => {
+        await userStore.logOut()
+        router.push({name: 'login'})
+
+    }
 </script>
 
 <style scoped>
@@ -136,6 +156,12 @@
         cursor: pointer;
     }
 
+    #list-options{
+        position: absolute;
+        bottom: 100px;
+        
+    }
+    
     .link {
         width: 100%;
         height: 100%;

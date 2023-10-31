@@ -1,27 +1,30 @@
 <template>
-    <div class="main-inventory">
-        <!-- Componentes modal -->
-        <Transition name="modal">
-          <div class="overlay" v-if="modal">
-            <ModalTemplate @aceptAction="sendUser" aceptText="Aceptar" ref="modalElement">
-                <template v-slot:body>
-                    <AddUserForm ref="userComponent" />
-                </template>
-            </ModalTemplate>
-          </div>
-      </Transition>
+    <div class="super-main">
+        <div class="main-inventory">
+            <!-- Componentes modal -->
+            <Transition name="modal">
+            <div class="overlay" v-if="modal">
+                <ModalTemplate @aceptAction="sendUser" aceptText="Aceptar" ref="modalElement">
+                    <template v-slot:body>
+                        <AddUserForm ref="userComponent" />
+                    </template>
+                </ModalTemplate>
+            </div>
+        </Transition>
 
-        <h1 class="title">USUARIOS</h1>
-        <div class="inventory-table">
-            <ViewOptions @showModal="showModal"></ViewOptions>
-            <UserTable class="user-table" :labels="labels">
-                <template v-slot:body>
-                    <BodyUsers>
-                        
-                    </BodyUsers>
-                </template>
-            </UserTable>
+            <h1 class="title">USUARIOS</h1>
+            <div class="inventory-table">
+                <ViewOptions @showModal="showModal"></ViewOptions>
+                <UserTable class="user-table" :labels="labels">
+                    <template v-slot:body>
+                        <BodyUsers>
+                            
+                        </BodyUsers>
+                    </template>
+                </UserTable>
+            </div>
         </div>
+        <NotiComp class="notis-cont"></NotiComp>
     </div>
 </template>
 
@@ -29,13 +32,14 @@
     import { ref } from 'vue';
     import { onClickOutside } from '@vueuse/core';
 
-
     import AddUserForm from '../components/users-components/userModal.vue';
     import ViewOptions from '../components/users-components/viewOptions.vue'
     import ModalTemplate from '../components/comun-components/modalTemplate.vue'
 
     import UserTable from '../components/comun-components/tableTemplate.vue';
     import BodyUsers from '../components/users-components/bodyUsers.vue'
+
+    import NotiComp from '../components/notification-components/notificationscomponent.vue';
 
     const labels = ['Documento', 'Usuario', 'Nombres', 'Apellidos', 'Correo', 'Acciones'];
 
@@ -66,6 +70,7 @@
 
     .main-inventory {
         width: var(--some-tables);
+        margin-right: 3%;
     }
     
     .user-table {

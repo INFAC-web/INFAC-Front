@@ -46,4 +46,9 @@
     tr {
         height: 70px;
     }
+
+    .buttons-opts{
+        background: WHITE;
+    }
+    
 </style>

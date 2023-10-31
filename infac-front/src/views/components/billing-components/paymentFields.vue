@@ -47,7 +47,7 @@
     import { getUser } from '@/model/users.model.js';
     import { generateInvoice } from '@/model/invoices.model.js';
 
-    import ErrorHandler from '@/store/errorHandler.js'; // Asegúrate de importar la clase
+    import ErrorHandler from '@/store/errorHandler.js'; 
     const errorHandler = new ErrorHandler();
 
     const props = defineProps(['invoiceInfo', 'fullTotal']);

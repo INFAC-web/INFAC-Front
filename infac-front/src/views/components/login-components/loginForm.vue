@@ -7,7 +7,7 @@
           <label for="name" class="label">Usuario</label>
         </div>
         <div class="inputGroup">
-          <input type="text" autocomplete="off" class="entry" v-model="pwd" required>
+          <input type="password" autocomplete="off" class="entry" v-model="pwd" required>
           <label for="name" class="label">Contraseña</label>
         </div>
   
@@ -22,7 +22,8 @@
     import api from '../../../model/axios/axios.js';
     import { useUserCounterStore } from '../../../store/userStore.js';
     import router from '@/router/index.js'
-
+    import ErrorHandler from '@/store/errorHandler.js'; 
+    const errorHandler = new ErrorHandler();
   
     const userStore = useUserCounterStore();
 
@@ -32,23 +33,49 @@
     const logIn = async () => {
         try {
           const userInfo = {nameUser: user.value, password: pwd.value}    
-          const response = await api.post("/auth/ ", userInfo);   
+          const response = await api.post("/auth/login ", userInfo);   
 
-          console.log(response)
+          await userStore.refreshToken();
+
+            switch (userStore.rol) {
+              case 'administrador':
+                router.push({name: 'users'});
+                break;
+              case 'empleado':
+                router.push({name: 'billing'});
+                break;
+              case 'bodega':
+                router.push({name: 'inventory'});
+                break;
+            }
           
+          /*
           if(response.data.status == 'pending'){
             console.log("Redirijido")
-            router.push({name: 'changepwd'})
+            //router.push({name: 'changepwd'})
+            router.push({name: 'users'});
 
           } else {
             console.log("Inicio de sesion Exitoso")
             await userStore.refreshToken();
-            router.push({name: 'users'});
-          }
 
+            switch (userStore.rol) {
+              case 'administrador':
+                router.push({name: 'users'});
+                break;
+              case 'user':
+                router.push({name: 'billing'});
+                break;
+              case 'bodega':
+                router.push({name: 'inventory'});
+                break;
+            }
+            
+          }
+          */
          
         } catch (error) {
-          
+          errorHandler.show(error)
         }
        
     }

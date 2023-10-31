@@ -6,10 +6,16 @@
                         <input id="productCode" type="text" autocomplete="off" class="entry" :class="invalidIDClass" v-model="productCode" @keyup.enter="getProduct" required>
                         <label for="name" class="label">Código del producto</label>
                     </div>
-                    <div class="inputGroup">
-                        <input type="text" autocomplete="off" class="entry"  v-model="product.name" required>
-                        <label for="name" class="label">Nombre del producto</label>
+                    <div>
+                        <div class="inputGroup">
+                            <input type="text" autocomplete="off" class="entry"  v-model="product.name" @blur="clean" @keypress="clean"  required>
+                            <label for="name" class="label">Nombre del producto</label>
+                        </div>
+                        <div class="search" v-if="showSearch">
+                            <li v-for="item in filteredItems" :key="item.id" @click="loadProduct(item.code)" class="one-search">{{ item.name }}</li>
+                        </div>
                     </div>
+                    
                     <div class="inputGroup">
                         <input type="text" autocomplete="off" class="entry centered" v-model="product.measure" required>
                         <label for="name" class="label">Medida</label>
@@ -37,6 +43,7 @@
                             <img :src="`${iconPaths.billingIcons}/plus-icon.svg`" style=" width: 15px; vertical-align: middle;">
                         </button>  
                     </div>  
+    
                 </div>
         </form>
     </div>
@@ -47,8 +54,8 @@
     import ErrorHandler from '@/store/errorHandler.js';
     const errorHandler = new ErrorHandler();
 
-    import { getProductFromApi } from '@/model/products.model.js'
-    import { defineEmits, ref } from 'vue';
+    import { getProductFromApi,getProductsFromApi } from '@/model/products.model.js'
+    import { defineEmits, ref, computed } from 'vue';
     const { iconPaths } = config;
 
     const emit = defineEmits(['addProduct']);
@@ -62,7 +69,8 @@
         iva: '',
     }
 
-    const product = ref(productModel);
+    const allProducts = ref();
+    const product = ref({...productModel});
     const productCode = ref(null);
     const quantity = ref('');
 
@@ -101,14 +109,37 @@
     }
 
     const initProduct = () =>{
-        product.value = productModel; //Reiniciar campos (Visual)
+        product.value = {...productModel}; //Reiniciar campos (Visual)
         quantity.value = '';
         productCode.value = null;
     }
 
-    defineExpose({
-        
+    const getForSearch = async() => {
+        allProducts.value = await getProductsFromApi();
+        console.log("Productos")
+        console.log(allProducts.value)
+    }
+
+    const loadProduct = async(itemID) => {
+        productCode.value = itemID;
+        await getProduct()
+    }   
+
+    const clean = () =>{
+        if(!product.value.name){
+            initProduct();
+        }
+    }
+
+    const filteredItems = computed(() => {
+         return allProducts.value.filter(item => item.name.includes(product.value.name));
+    });
+
+    const showSearch = computed(() => {
+        return product.value.name && !productCode.value;
     })
+
+    getForSearch();
 </script>
 <style scoped>
 
@@ -117,6 +148,39 @@
     .content {
         margin-top: 15px
     }
+
+    .search {
+        position: absolute;
+        background: white;
+        width: 22%;
+        box-shadow: 0 0 0 3px rgba(221, 221, 221, 0.3);
+        padding: 10px;
+        max-height: 300px;
+        overflow: auto;
+        font-family: Gilroy-Medium;
+    }
+
+    .one-search {
+        height: 30px;
+        list-style: none;
+        cursor: pointer;
+        border-bottom: 1px solid rgb(243, 243, 243);
+    }
+
+    .one-search:hover {
+        background: rgb(224, 224, 224);
+        
+    }
+
+    .search::-webkit-scrollbar {
+        width: 12px; /* Ancho del scrollbar */
+    }
+
+    .search::-webkit-scrollbar-thumb {
+        background-color: #EBEBEB; /* Color del thumb (barra deslizadora) */
+        border-radius: 6px;
+    }
+
 
     #buttons {
         display: flex;

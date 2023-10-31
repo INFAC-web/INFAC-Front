@@ -12,8 +12,11 @@ export const useUserCounterStore = defineStore('user', () => {
         try {
             console.log("Refrescando Token")
             const res = await api.get('/auth/refresh');
+
             token.value = res.data.token;
             expiresIn.value = res.data.expiresIn;
+            rol.value = res.data.rol;
+
         } catch (error) {
             console.log(error)
         }
@@ -47,6 +50,7 @@ export const useUserCounterStore = defineStore('user', () => {
     return {
         token,
         expiresIn,
+        rol,
         refreshToken,
         logOut,
         tokenInfo

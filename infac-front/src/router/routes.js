@@ -1,6 +1,6 @@
 const routes = [
   {
-    path: '/login', name:'index', component: () => import('../views/pages/LoginPage.vue')
+    path: '/login', name:'login', component: () => import('../views/pages/LoginPage.vue')
   },
   {
     path: '/changepwd', name:'changepwd', component: () => import('../views/pages/changePasswd.vue')
@@ -60,6 +60,7 @@ const routes = [
     ], 
     meta: {
       auth: true,
+      roles: ['administrador']
     }
   },
 ];
