@@ -19,7 +19,7 @@
                             </router-link>
                         </li>
                          -->
-                        <li>
+                        <li v-if="userStore.rol='admin'">
                             <router-link to="/inventory" class="link" active-class="link-selected">
                                 <svg class="svg-icon" width="17" height="25" viewBox="0 0 17 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12.25 2.8158H13.75C14.3467 2.8158 14.919 3.07332 15.341 3.53172C15.7629 3.99013 16 4.61185 16 5.26013V21.5557C16 22.204 15.7629 22.8257 15.341 23.2841C14.919 23.7425 14.3467 24 13.75 24H3.25C2.65326 24 2.08097 23.7425 1.65901 23.2841C1.23705 22.8257 1 22.204 1 21.5557V5.26013C1 4.61185 1.23705 3.99013 1.65901 3.53172C2.08097 3.07332 2.65326 2.8158 3.25 2.8158H4.75" stroke="#656565" stroke-width="2" stroke-linejoin="round"/>
@@ -27,7 +27,7 @@
                                 </svg>  
                             </router-link>
                         </li>
-                        <li>
+                        <li v-if="userStore.rol='admin'">
                             <router-link to="/users" class="link" active-class="link-selected">
                                 <svg class="svg-icon" width="23" height="17" viewBox="0 0 23 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M18.4049 4.5C18.2689 6.47701 16.8685 8 15.3415 8C13.8144 8 12.4118 6.4775 12.2781 4.5C12.1388 2.44326 13.5021 1 15.3415 1C17.1809 1 18.5441 2.48069 18.4049 4.5Z" stroke="#656565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -37,7 +37,7 @@
                                 </svg>                            
                             </router-link>
                         </li>
-                        <li>
+                        <li v-if="userStore.rol='admin'">
                             <router-link to="/notebook/history" class="link" active-class="link-selected">
                                 <svg class="svg-icon" width="25" height="21" viewBox="0 0 25 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12.5 5.75C13.2857 2.6249 16.2533 1.0292 22.7143 1.00001C22.8176 0.999613 22.9199 1.01982 23.0154 1.05947C23.1109 1.09911 23.1977 1.15741 23.2707 1.231C23.3438 1.3046 23.4016 1.39202 23.441 1.48825C23.4803 1.58448 23.5004 1.6876 23.5 1.79167V16.0417C23.5 16.2516 23.4172 16.453 23.2699 16.6015C23.1225 16.7499 22.9227 16.8333 22.7143 16.8333C16.4286 16.8333 14.0002 18.1104 12.5 20M12.5 5.75C11.7143 2.6249 8.74674 1.0292 2.28572 1.00001C2.18243 0.999613 2.08008 1.01982 1.98458 1.05947C1.88908 1.09911 1.80231 1.15741 1.72927 1.231C1.65623 1.3046 1.59837 1.39202 1.55902 1.48825C1.51967 1.58448 1.49962 1.6876 1.50001 1.79167V15.9462C1.50001 16.435 1.80054 16.8333 2.28572 16.8333C8.57143 16.8333 11.0086 18.1198 12.5 20M12.5 5.75V20" stroke="#656565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,8 +99,9 @@
     const salir = async () => {
         await userStore.logOut()
         router.push({name: 'login'})
-
     }
+
+
 </script>
 
 <style scoped>
@@ -161,7 +162,7 @@
         bottom: 100px;
         
     }
-    
+
     .link {
         width: 100%;
         height: 100%;

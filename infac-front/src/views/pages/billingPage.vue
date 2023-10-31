@@ -275,10 +275,21 @@
 
 
     .buttonFreeze {
-        height: 30px;
+        height: 35px;
         width: auto;
         margin: auto 0;
         border-radius: 5px;
+        background: #0C8CE9;
+        color: #FFF;
+        font-family: Gilroy-Bold;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        border-radius: 5px;
+        border: none;
+        padding: 0px 10px;
+
     }
 
 
